@@ -1,28 +1,41 @@
-<template>
+<template >
+
+    <v-app class="max-h-20 ">
+        
+        <v-app-bar class="p-2">
+            <img class="max-w-[50px]" src="/images/png/logo-no-background.png" alt="">
     
-       <v-app class="max-h-20">
-        <v-app-bar >
-            <v-container>
-                <v-app-bar-title>Poor Gold</v-app-bar-title>
-                    <div id="signin" class="p-2 space-x-5 inline-block bg-blue-300">
-                        <v-btn v-if="!user" @click="handleLoginPress">
-                            Login
-                        </v-btn>
-                        <v-btn v-if="!user" @click="handleRegisterPress">
-                            Register
-                        </v-btn>
-                        <v-btn @click="handleHomePress">
-                            Home
-                        </v-btn>    
-                        <v-btn @click="handleProfile" v-if="user">
-                            Profile
-                        </v-btn>
-                    </div>
+            <v-container class="flex  justify-between">
+      
+
+
+                <div class="bg-yellow-300"> 
+                    <v-btn class="bg-yellow-300">
+                        Poor Gold
+                    </v-btn>
+                </div>
+                <div id="signin" class="p-2 space-x-5 bg-blue-300">
+                    <v-btn v-if="!user" @click="handleLoginPress">
+                        Login
+                    </v-btn>
+                    <v-btn v-if="!user" @click="handleRegisterPress">
+                        Register
+                    </v-btn>
+                    <v-btn @click="handleHomePress">
+                        Home
+                    </v-btn>
+                    <v-btn @click="handleProfile" v-if="user">
+                        Profile
+                    </v-btn>
+    
+                </div>
             </v-container>
         </v-app-bar>
-       </v-app>
-        <slot />
-   
+    
+       
+    </v-app>
+    <slot />
+
 </template>
 
 <script setup lang="ts">
@@ -46,6 +59,4 @@ const handleHomePress = () => {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
