@@ -17,75 +17,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="item in orderArray" :key="item.name">
-                <td>{{ item.product_id }}</td>
+            <tr v-for="item in orderArray" :key="item.id">
+                <td>{{ item.Product.name }}</td>
                 <td>{{ item.quantity }}</td>
                 <td>{{ item.created_at }}</td>
             </tr>
         </tbody>
     </v-table>
 </template>
-<!-- 
-  <script lang="ts">
-  export default {
-    data () {
-      return {
-        desserts: [
-          {
-            name: 'Frozen Yogurt',
-            calories: 159,
-            time: 'now'
-          },
-          {
-            name: 'Ice cream sandwich',
-            calories: 237,
-            time: 'now'
-          },
-          {
-            name: 'Eclair',
-            calories: 262,
-            time: 'now'
-          },
-          {
-            name: 'Cupcake',
-            calories: 305,
-            time: 'now'
-          },
-          {
-            name: 'Gingerbread',
-            calories: 356,
-            time: 'now'
-          },
-          {
-            name: 'Jelly bean',
-            calories: 375,
-            time: 'now'
-          },
-          {
-            name: 'Lollipop',
-            calories: 392,
-            time: 'now'
-          },
-          {
-            name: 'Honeycomb',
-            calories: 408,
-            time: 'now'
-          },
-          {
-            name: 'Donut',
-            calories: 452,
-            time: 'now'
-          },
-          {
-            name: 'KitKat',
-            calories: 518,
-            time: 'now'
-          },
-        ],
-      }
-    },
-  }
-</script> -->
+
 
 <script setup lang="ts">
 definePageMeta({
@@ -100,7 +40,8 @@ const user = useSupabaseUser()
 const loading = ref(false)
 const errorMsg = ref('')
 const successMsg = ref('')
-const orderArray = ref<Database['public']['Tables']['Cart']['Row'][]>([])
+// const orderArray = ref<Database['public']['Tables']['Cart'][]>([])
+const orderArray = ref<any>([])
 
 const handleCartFetch = async () => {
 
@@ -111,8 +52,15 @@ const handleCartFetch = async () => {
         loading.value = true
         const { data, error } = await supabase
             .from('Cart')
-            .select('*')
+            .select(`
+        Product (
+          name
+        ),
+        quantity,
+        created_at
+      `)
             .eq('customer_id', user.value?.id || '')
+            
         if (error) throw error
 
         if (error) {
