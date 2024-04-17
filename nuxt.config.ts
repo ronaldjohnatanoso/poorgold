@@ -11,6 +11,8 @@ export default defineNuxtConfig({
     "vuetify-nuxt-module",
     "@nuxtjs/tailwindcss",
     "@nuxtjs/supabase",
+    "@pinia/nuxt"
+  
   ],
   supabase:{
     redirect: false,

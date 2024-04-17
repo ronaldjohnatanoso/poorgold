@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import Data_check from '~/components/data_check.vue';
 definePageMeta({
     layout: 'signin-layout',
     middleware: ['login-auth']
@@ -56,7 +57,8 @@ const password = ref('');
 const repassword = ref('');
 const errorMsg = ref('');
 const successMsg = ref('');
-const supabase = useSupabaseClient()
+import type { Database } from '~/lib/database.types';
+const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 const router = useRouter()
 
@@ -106,7 +108,19 @@ const handleRegister = async () => {
                 return;
             }
             //update the user metadata
-   
+            const { error } = await supabase
+                .from('user')
+                .update({ role: 'customer', fullname: fullname.value })
+                .eq('id', userId as string)
+                .select()
+
+            // const { error } = await supabase
+            //     .from('user')
+            //     .update({ role: 'customer' })
+            //     .eq('id', userId as string)
+            //     .select()
+
+
 
             // //print the created_at date
             // console.log((data as any)?.created_at);

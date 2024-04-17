@@ -15,12 +15,13 @@
             <button @click="handleLogout">Logout</button>
         </v-btn>
     </div>
+    <ProductCheck />
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-   // middleware: ["profile-auth"],
-    layout: 'signin-layout'
+   middleware: ["profile-auth"],
+    layout: "signin-layout",
 })
 
 
@@ -36,7 +37,7 @@ const userRole = ref<string>(metadata?.role || "default role");
 const userFullName = ref<string>(metadata?.fullname || "unknown");
 
 const handleLogout = async () => {
-    console.log("hello")
+   
     try {
         const { error } = await supabase.auth.signOut();
         if (error) throw error;

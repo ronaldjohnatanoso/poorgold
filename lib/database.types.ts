@@ -9,22 +9,141 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      Product: {
+        Row: {
+          brand: string | null
+          created_at: string
+          description: string | null
+          id: number
+          name: string | null
+          parent_product_type: string | null
+          price: number
+          product_type: string
+          size: string | null
+          store_id: number
+          vendor_id: number
+        }
+        Insert: {
+          brand?: string | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string | null
+          parent_product_type?: string | null
+          price: number
+          product_type: string
+          size?: string | null
+          store_id: number
+          vendor_id: number
+        }
+        Update: {
+          brand?: string | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string | null
+          parent_product_type?: string | null
+          price?: number
+          product_type?: string
+          size?: string | null
+          store_id?: number
+          vendor_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_Product_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "Store"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_Product_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "Vendor"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Sale: {
+        Row: {
+          created_at: string
+          customer_id: number
+          id: number
+          open_time: string | null
+          product_id: number
+          quantity: number
+          store_id: number
+        }
+        Insert: {
+          created_at?: string
+          customer_id: number
+          id?: number
+          open_time?: string | null
+          product_id: number
+          quantity?: number
+          store_id: number
+        }
+        Update: {
+          created_at?: string
+          customer_id?: number
+          id?: number
+          open_time?: string | null
+          product_id?: number
+          quantity?: number
+          store_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_Sale_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "Product"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Store: {
+        Row: {
+          contact_number: number | null
+          created_at: string
+          id: number
+          location: string | null
+          time_open: string | null
+        }
+        Insert: {
+          contact_number?: number | null
+          created_at?: string
+          id?: number
+          location?: string | null
+          time_open?: string | null
+        }
+        Update: {
+          contact_number?: number | null
+          created_at?: string
+          id?: number
+          location?: string | null
+          time_open?: string | null
+        }
+        Relationships: []
+      }
       user: {
         Row: {
           created_at: string
-          "full name": string | null
+          fullname: string | null
           id: string
           role: string | null
         }
         Insert: {
           created_at?: string
-          "full name"?: string | null
+          fullname?: string | null
           id?: string
           role?: string | null
         }
         Update: {
           created_at?: string
-          "full name"?: string | null
+          fullname?: string | null
           id?: string
           role?: string | null
         }
@@ -37,6 +156,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      Vendor: {
+        Row: {
+          contact_number: number | null
+          created_at: string
+          fullname: string | null
+          id: number
+        }
+        Insert: {
+          contact_number?: number | null
+          created_at?: string
+          fullname?: string | null
+          id?: number
+        }
+        Update: {
+          contact_number?: number | null
+          created_at?: string
+          fullname?: string | null
+          id?: number
+        }
+        Relationships: []
       }
     }
     Views: {

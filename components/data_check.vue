@@ -26,6 +26,7 @@ const handleCheck = async () => {
         .from('user')
         .select('*')
         .eq('id', userId as string)
+        
         .single();
 
     if (queryError) {
