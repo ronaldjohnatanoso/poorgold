@@ -114,17 +114,6 @@ const handleRegister = async () => {
                 .eq('id', userId as string)
                 .select()
 
-            // const { error } = await supabase
-            //     .from('user')
-            //     .update({ role: 'customer' })
-            //     .eq('id', userId as string)
-            //     .select()
-
-
-
-            // //print the created_at date
-            // console.log((data as any)?.created_at);
-
         }
     } catch (error) {
         errorMsg.value = (error as any).error_description || (error as any).message

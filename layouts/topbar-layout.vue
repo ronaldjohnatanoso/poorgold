@@ -27,6 +27,9 @@
                     <v-btn @click="handleProfile" v-if="user">
                         Profile
                     </v-btn>
+                    <v-btn @click="handleGoToCart" v-if="user">
+                        My Cart
+                    </v-btn>
     
                 </div>
             </v-container>
@@ -56,6 +59,10 @@ const handleRegisterPress = () => {
 
 const handleHomePress = () => {
     router.push('/')
+}
+
+const handleGoToCart = () => {
+    router.push('/cart')
 }
 </script>
 

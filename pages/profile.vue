@@ -9,6 +9,9 @@
     <div>
         full: {{ userFullName }}
     </div>
+    <dir>
+        id: {{ user ? user.id : '' }}
+    </dir>
     <!-- <data_check /> -->
     <div>
         <v-btn>
