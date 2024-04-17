@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useClickStore } from './stores/clickStore';
+import { useClickStore } from '../stores/clickStore';
 const clickStore = useClickStore()
 const {count } = storeToRefs(clickStore)
 

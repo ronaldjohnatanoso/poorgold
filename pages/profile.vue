@@ -21,7 +21,7 @@
 <script setup lang="ts">
 definePageMeta({
    middleware: ["profile-auth"],
-    layout: "signin-layout",
+    layout: "topbar-layout",
 })
 
 

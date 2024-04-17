@@ -18,7 +18,7 @@
 import { ref } from 'vue';
 import Data_check from '~/components/data_check.vue';
 definePageMeta({
-    layout: 'signin-layout',
+    layout: 'topbar-layout',
     middleware: ['login-auth']
 })
 

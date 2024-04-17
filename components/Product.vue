@@ -8,17 +8,22 @@
       <img cover class="h-[200px]" src="/images/png/logo-color.png" alt="">
   
       <v-card-title>
-        product name
+        {{ productData.name }}
       </v-card-title>
   
       <v-card-subtitle>
-        sub title
-      </v-card-subtitle>
-  
+        Product Type: {{ productData.product_type }}
+        <br> Size: {{ productData.size }} <br>
+        Price: {{ productData.price }} <br>
+        Brand: {{ productData.brand }}
+       </v-card-subtitle>
+      
+      
+
       <v-card-actions>
-        <v-btn
+        <v-btn @click="handleAddToCart"
           color="orange-lighten-2"
-          text="Know more"
+          text="Add to Cart"
         ></v-btn>
   
         <v-spacer></v-spacer>
@@ -34,16 +39,29 @@
           <v-divider></v-divider>
   
           <v-card-text>
-            I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.
-          </v-card-text>
+            {{ productData.description }}
+        </v-card-text>
         </div>
       </v-expand-transition>
     </v-card>
   </template>
-  <script>
-    export default {
-      data: () => ({
-        show: false,
-      }),
-    }
+  <script setup lang="ts">
+  import { ref } from 'vue'
+  import type { Database } from '~/lib/database.types';
+
+  const props = defineProps<{
+    productData : Database["public"]["Tables"]["Product"]["Row"]
+  }>()
+
+  const handleAddToCart = () => {
+    console.log("Added to cart")
+  }
+
+  const show = ref(false)
+  
+  const toggleShow = () => {
+    show.value = !show.value
+  }
+
+  show.value = false
   </script>
