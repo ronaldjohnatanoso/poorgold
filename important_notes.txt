@@ -10,3 +10,39 @@ by default filtering foreign tables is outer join, every table is added, those n
         .eq('Store.location', 'website')
  
         ;
+
+
+
+//if you want to nest types inside a base type, this happens when you fetch from db with joined tables, their types are nested depending on table types so you have to set that at run time dont hard code
+type first = {
+  name: string,
+  age: number
+}
+
+type Weighted = {
+  weight: number,
+  length: number
+}
+
+type wrongType = first & Weighted;
+
+
+
+const dog : wrongType = {
+  age : 23,
+  name : 'dick',
+  weight: 24,
+  length : 23
+}
+
+type correctType = first & {Store : Weighted}
+
+//what i want
+const cat : correctType = {
+  age: 23,
+  name : 'dick',
+  Store: {
+    weight: 21,
+    length : 23,
+  }
+}
