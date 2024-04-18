@@ -46,3 +46,67 @@ const cat : correctType = {
     length : 23,
   }
 }
+
+//console out the keys of an object nested
+type Measurement = {
+  weight: number,
+  length: number
+}
+
+type correctType = {
+  age: number,
+  name: string,
+  Store: Measurement
+};
+
+const cat: correctType = {
+  age: 23,
+  name: 'dick',
+  Store: {
+    weight: 21,
+    length: 23,
+  }
+};
+
+function logMembers(obj: correctType) {
+  const keys = Object.keys(obj) as (keyof correctType)[];
+  keys.forEach(key => {
+    const value = obj[key];
+    if (typeof value === 'object') {
+      const subKeys = Object.keys(value) as (keyof Measurement)[];
+      subKeys.forEach(subKey => {
+        console.log(`${key}.${subKey}`);
+      });
+    } else {
+      console.log(`${key}`);
+    }
+  });
+}
+
+logMembers(cat);
+
+
+//this is to expanded object keys with {value, render: boolean} to only leaf values, this adds choice whether we want to render that evne in nested
+type Measurement = { weight: number, length: number };
+type PropertyObject<T> = { value: T, render: boolean };
+type ExpandedType<T> = T extends object ? { [K in keyof T]: ExpandedType<T[K]> } : PropertyObject<T>;
+type CorrectType = { age: number, name: string, Store: Measurement };
+
+function expandObject<T>(obj: T): ExpandedType<T> {
+  const expandedObj: any = {};
+  for (const key in obj) {
+    if (Object.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      if (typeof value === 'object') {
+        expandedObj[key] = expandObject(value);
+      } else {
+        expandedObj[key] = { value, render: true };
+      }
+    }
+  }
+  return expandedObj;
+}
+
+const cat: CorrectType = { age: 23, name: 'dick', Store: { weight: 21, length: 23 } };
+const expandedCat: ExpandedType<CorrectType> = expandObject(cat);
+console.log(expandedCat.Store.length.value); // Correct type

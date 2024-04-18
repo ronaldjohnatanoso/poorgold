@@ -6,49 +6,49 @@
         <v-autocomplete
   label="Enter store location"
     v-model="pickedLocation"
-  :items="locationArray"
+  :items="storeArray.map(store => store.location)"
 ></v-autocomplete>
         <v-container>
             Store Location: {{ pickedLocation }}
         </v-container>
-        <div> {{ inventoryData }}</div>
+        <!-- <div> {{ inventoryData }}</div> -->
     </v-container>
     <v-table lazy density="compact">
         <thead>
             <tr>
-                <th class="text-left">
-                    Product ID
-                </th>
-                <th class="text-left">
+                <th class="header text-left">
                     Product Name
                 </th>
-                <th class="text-left">
-                    Quantity
+                <th class="header text-left">
+                    Brand
                 </th>
-                <th class="text-left">
-                    Ordered At Time:
+                <th class="header text-left">
+                    Size
                 </th>
-                <th class="text-left">
-                    Price:
+                <th class="header text-left">
+                    Price
                 </th>
-                <th class="text-left">
-                    Delete Order
+                <th class="header text-left">
+                    Vendor
                 </th>
-                <th class="text-left">
+                <th class="header text-left">
+                    Product Type
+                </th>
+                <th class="header text-left">
                     Remaining Stock
                 </th>
             </tr>
         </thead>
         <tbody>
-            <!-- <tr v-for="item in orderArray" :key="item.id">
-                <td>{{ item.Product.id }}</td>
-                <td>{{ item.Product.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.created_at }}</td>
-                <td>{{ item.Product.price }}</td>
-   
-                <td>{{ item.Product.remaining_stock }}</td>
-            </tr> -->
+            <tr v-for="item in inventoryArray" :key="item.id">
+                <td>{{ item.name }}</td>
+                <td>{{ item.brand }}</td>
+                <td>{{ item.size }}</td>
+                <td>P {{ item.price }}</td>
+                <td>{{ item.Vendor.fullname }}</td>
+                <td>{{item.product_type}}</td>
+                <td>{{ item.remaining_stock }}</td>
+            </tr>
         </tbody>
     </v-table>
 </template>
@@ -72,6 +72,27 @@ type inventory = Database['public']['Tables']['Product']['Row'] & {
     Vendor: Database['public']['Tables']['Vendor']['Row']
 }
 
+let inventoryKeys : string[] = []
+
+function logMembers(obj: inventory) {
+  const keys = Object.keys(obj) as (keyof inventory)[];
+  keys.forEach(key => {
+    const value = obj[key];
+    if (typeof value === 'object') {
+    const subKeys = value ? Object.keys(value) as (keyof Database['public']['Tables']['Store']['Row'])[] : [];
+      subKeys.forEach(subKey => {
+        inventoryKeys.push(`${key}.${subKey}`)
+        //console.log(`${key}.${subKey}`);
+      });
+    } else {
+        inventoryKeys.push(`${key}`)
+     // console.log(`${key}`);
+    }
+  });
+
+  console.log(inventoryKeys)
+}
+
 const handleFetchStores = async () => {
     try {
         const {data, error} = await supabase
@@ -92,9 +113,11 @@ const handleFetchStores = async () => {
         console.log(error)
     }
 }
-const inventoryData = ref<inventory[]>([])
+const inventoryArray = ref<inventory[]>([])
 const handleFetchInventory = async () => {
-    console.log("i fetch inventory" + pickedLocation.value)
+    //need to get the store id from picked location
+    const storeId = storeArray.value.find(store => store.location === pickedLocation.value)?.id
+
     try {
         const { data , error } = await supabase
    .from('Product')
@@ -107,19 +130,21 @@ const handleFetchInventory = async () => {
        *
      )
    `)
-   .match({ 'Store.id': 2 });
+   .match({ 'Store.id': storeId });
 
         
         if( error) throw error
         if(!error) {
             console.log(data)
-            inventoryData.value = data as inventory[]
-            console.log("type: " + inventoryData )
+            inventoryArray.value = data as inventory[]
+          //  console.log("type: " + inventoryArray )
         }
     } catch (error) {
         console.log(error)
 
     }
+
+    logMembers(inventoryArray.value[0]);
 }
 
 handleFetchStores()
@@ -128,5 +153,10 @@ watch(pickedLocation, handleFetchInventory)
 </script>
 
 <style scoped>
-
+.header{
+    font-weight: bold;
+    font-size: 16px;
+    color: black;
+    background-color: rgb(233, 176, 176);
+}
 </style>
