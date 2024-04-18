@@ -10,7 +10,17 @@ export const useProductStore = defineStore({
   actions: {
     async fetchProducts(supabase: SupabaseClient<Database>) {
       try {
-        const { data, error } = await supabase.from("Product").select("*"); // Select all columns from the 'Products' table
+        const { data, error } = await supabase.from("Product").select(`
+          *,
+          Store!inner(*)
+        `)
+        // .eq('Store.location', 'website')
+        .match({
+          'Store.location': 'website',
+        })
+        .gt('remaining_stock', 0)
+ 
+        ;
 
         if (error) {
           throw error;
@@ -25,15 +35,25 @@ export const useProductStore = defineStore({
 
     async getLength(supabase: SupabaseClient<Database>) {
       try {
-        const { data, error } = await supabase.from("Product").select("*"); // Select all columns from the 'Products' table
+        const { data, error } = await supabase.from("Product").select(`
+          *,
+          Store!inner(*)
+        `)
+        // .eq('Store.location', 'website')
+        .match({
+          'Store.location': 'website',
+        })
+        .gt('remaining_stock', 0)
+ 
+        ;
 
         if (error) {
           throw error;
         }
 
         // Update the 'products' state with the fetched data
+        console.log(data);
         this.products = data;
-
         return this.products.length as number | 0;
       } catch (error) {
         console.error("Error fetching products:", error);

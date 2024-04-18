@@ -12,7 +12,8 @@
       Product Type: {{ productData.product_type }}
       <br> Size: {{ productData.size }} <br>
       Price: {{ productData.price }} <br>
-      Brand: {{ productData.brand }}
+      Brand: {{ productData.brand }} <br>
+      Available: {{ productData.remaining_stock }}
     </v-card-subtitle>
 
 
@@ -47,7 +48,7 @@ const successMsg = ref('')
 const props = defineProps<{
   productData: Database["public"]["Tables"]["Product"]["Row"]
 }>()
-
+const route = useRouter()
 const handleAddToCart = async () => {
   console.log("Added to cart")
 
@@ -66,10 +67,12 @@ const handleAddToCart = async () => {
 
     if (error) {
       console.log(error)
+      route.push('/login')
+      
     } else if (!error) {
-      successMsg.value = "Registration successful"
-      console.log(successMsg.value)
 
+      console.log(successMsg.value)
+  
       //update user metadata to customer table
       const userId = user.value?.id;
 

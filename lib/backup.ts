@@ -58,7 +58,6 @@ export type Database = {
           parent_product_type: string | null
           price: number
           product_type: string
-          remaining_stock: number
           size: string | null
           store_id: number
           vendor_id: number
@@ -72,7 +71,6 @@ export type Database = {
           parent_product_type?: string | null
           price: number
           product_type: string
-          remaining_stock?: number
           size?: string | null
           store_id: number
           vendor_id: number
@@ -86,7 +84,6 @@ export type Database = {
           parent_product_type?: string | null
           price?: number
           product_type?: string
-          remaining_stock?: number
           size?: string | null
           store_id?: number
           vendor_id?: number

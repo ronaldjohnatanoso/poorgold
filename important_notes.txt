@@ -1,0 +1,12 @@
+by default filtering foreign tables is outer join, every table is added, those not meeting condition is just nulled, 
+    we want inner join to ignore and not null those others
+
+            async getLength(supabase: SupabaseClient<Database>) {
+      try {
+        const { data, error } = await supabase.from("Product").select(`
+          *,
+          Store!inner(*)
+        `)
+        .eq('Store.location', 'website')
+ 
+        ;
