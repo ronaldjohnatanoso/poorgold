@@ -55,7 +55,7 @@
     const successMsg = ref('');
     const supabase = useSupabaseClient()
     const router = useRouter()
-
+    const roleStore = useRoleStore()
 
 const loading = ref(false)
     const handleLogin = async () => {
@@ -70,7 +70,7 @@ const loading = ref(false)
          // console.log(error)
         }
         else if (!error) {
-          
+            roleStore.getUserRole()
             router.push('/profile')
            
         }

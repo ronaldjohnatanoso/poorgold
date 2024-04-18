@@ -61,6 +61,7 @@ import type { Database } from '~/lib/database.types';
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 const router = useRouter()
+const roleStore = useRoleStore()
 
 
 const loading = ref(false)
@@ -113,6 +114,7 @@ const handleRegister = async () => {
                 .update({ role: 'customer', fullname: fullname.value })
                 .eq('id', userId as string)
                 .select()
+                roleStore.getUserRole()
                 router.push('/profile')
         }
     } catch (error) {

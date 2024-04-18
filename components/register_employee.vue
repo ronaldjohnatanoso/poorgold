@@ -67,7 +67,7 @@ import type { Database } from '~/lib/database.types';
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 const router = useRouter()
-
+const roleStore = useRoleStore()    
 
 const loading = ref(false)
 const handleRegister = async () => {
@@ -127,6 +127,7 @@ const handleRegister = async () => {
 
         const { error: signOutError } = await supabase.auth.signOut();
         if (signOutError) throw signOutError;
+            roleStore.getUserRole()
             router.push('/login')
         }
     } catch (error) {

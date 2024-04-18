@@ -39,14 +39,17 @@ const userId = user?.id;
 
 const userRole = ref<string>("fetching...");
 const userFullName = ref<string>(metadata?.fullname || "unknown");
+const roleStore = useRoleStore();
 
 const handleLogout = async () => {
    
     try {
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
+        roleStore.getUserRole()
         router.push("/login")
     } catch (error) {
+        roleStore.getUserRole()
         router.push("/login")
         console.log((error as Error).message);
     }
