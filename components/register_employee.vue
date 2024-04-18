@@ -6,21 +6,17 @@
             <v-text-field type="password" v-model="repassword" :rules="passrules"
                 label="Re-enter password"></v-text-field>
             <v-text-field v-model="fullname" :rules="namerules" label="Full Name"></v-text-field>
+            <v-select v-model="roleType" :rules="roleRules" label="What is the role?" :items="['customer', 'employee', 'vendor', 'admin']"
+                variant="outlined"></v-select>
             <v-btn class="mt-2" type="submit" block>Submit</v-btn>
             <div class="m-2 text-red-500">{{ errorMsg }}</div>
         </v-form>
     </v-sheet>
+    <div>hei</div>
 
 </template>
 
-
 <script setup lang="ts">
-import { ref } from 'vue';
-import Data_check from '~/components/data_check.vue';
-definePageMeta({
-    layout: 'topbar-layout',
-    middleware: ['login-auth']
-})
 
 const emailrules = [
     (value: any) => {
@@ -51,10 +47,20 @@ const passrules = [
     },
 ]
 
+const roleRules = [
+    (value: any) => {
+        //if not empty
+        if (value) return true
+
+        return 'You must select a role.'
+    },
+]
+
 const fullname = ref<string>('')
 const email = ref('');
 const password = ref('');
 const repassword = ref('');
+const roleType = ref('');
 const errorMsg = ref('');
 const successMsg = ref('');
 import type { Database } from '~/lib/database.types';
@@ -65,6 +71,8 @@ const router = useRouter()
 
 const loading = ref(false)
 const handleRegister = async () => {
+    const currentUser = user.value
+
     //check password re enter
     if (password.value !== repassword.value) {
         errorMsg.value = "Passwords do not match"
@@ -78,14 +86,14 @@ const handleRegister = async () => {
             password: password.value,
             options: {
                 data: {
-                    role: 'customer',
+                    role: roleType.value,
                     fullname: fullname.value,
 
                 }
             }
         })
         if (error) throw error
-    
+        //router.push('/login')
         if (error) {
             console.log(error)
         } else if (!error) {
@@ -110,10 +118,16 @@ const handleRegister = async () => {
             //update the user metadata
             const { error } = await supabase
                 .from('user')
-                .update({ role: 'customer', fullname: fullname.value })
+                .update({ role: roleType.value, fullname: fullname.value })
                 .eq('id', userId as string)
                 .select()
-                router.push('/profile')
+
+            //sign out
+
+
+        const { error: signOutError } = await supabase.auth.signOut();
+        if (signOutError) throw signOutError;
+            router.push('/login')
         }
     } catch (error) {
         errorMsg.value = (error as any).error_description || (error as any).message
@@ -122,6 +136,7 @@ const handleRegister = async () => {
         loading.value = false
     }
 }
+
 </script>
 
 <style scoped></style>

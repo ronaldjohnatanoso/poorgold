@@ -16,5 +16,8 @@ export default defineNuxtConfig({
   ],
   supabase:{
     redirect: false,
+  },
+  imports : {
+    dirs : ['stores']
   }
 })

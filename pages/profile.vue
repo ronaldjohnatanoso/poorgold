@@ -14,8 +14,8 @@
     </div>
     <!-- <data_check /> -->
     <div>
-        <v-btn>
-            <button @click="handleLogout">Logout</button>
+        <v-btn  @click="handleLogout">Logout>
+          
         </v-btn>
     </div>
     <ProductCheck />
@@ -37,7 +37,7 @@ let metadata = user?.user_metadata;
 const router = useRouter();
 const userId = user?.id;
 
-const userRole = ref<string>("default role");
+const userRole = ref<string>("fetching...");
 const userFullName = ref<string>(metadata?.fullname || "unknown");
 
 const handleLogout = async () => {
@@ -79,6 +79,10 @@ const handleFetchUserInfo = async () =>{
 }
 
 handleFetchUserInfo()
+
+
+
+
 </script>
 
 <style scoped></style>

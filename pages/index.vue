@@ -1,5 +1,8 @@
 <template>
 
+        <v-btn @click="handleUpdateRole">
+            update role
+        </v-btn>
 
     <div class="p-2 flex justify-center">
         <div>Find the product you like</div>
@@ -23,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { storeToRefs } from 'pinia';
 
 
@@ -31,6 +35,13 @@ definePageMeta({
     layout: 'topbar-layout',
 
 })
+
+const roleStore = useRoleStore()
+const {userRole} = storeToRefs(roleStore)
+
+const handleUpdateRole = async () => {
+    await roleStore.getUserRole()
+}
 
 const supabase = useSupabaseClient();
 const productStore = useProductStore()

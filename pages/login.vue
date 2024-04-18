@@ -66,9 +66,13 @@ const loading = ref(false)
             password: password.value,
         })
         if (error) throw error
-        router.push('/profile')
         if (error) {
          // console.log(error)
+        }
+        else if (!error) {
+          
+            router.push('/profile')
+           
         }
     } catch (error) {
       errorMsg.value = (error as any).error_description || (error as any).message

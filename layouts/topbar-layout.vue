@@ -27,10 +27,18 @@
                     <v-btn @click="handleProfile" v-if="user">
                         Profile
                     </v-btn>
-                    <v-btn @click="handleGoToCart" v-if="user">
+                    <v-btn @click="handleGoToCart" v-if="user && userRole=='customer'">
                         My Cart
                     </v-btn>
-    
+                    <v-btn @click="handleGoToInventory" v-if=" userRole ==='employee'">
+                        Inventory
+                    </v-btn>
+                    <v-btn @click="handleGoToAdmin" v-if="user && userRole =='admin'">
+                        Admin Page
+                    </v-btn>
+                    <v-btn @click="handleRoleCheck" class="bg-red-300">
+                        role : {{ userRole}}
+                    </v-btn>
                 </div>
             </v-container>
         </v-app-bar>
@@ -42,7 +50,13 @@
 </template>
 
 <script setup lang="ts">
-const user = useSupabaseUser()
+
+let user = useSupabaseUser()
+const roleStore = useRoleStore()
+const {userRole} = storeToRefs(roleStore)
+await roleStore.getUserRole()
+// let metadata = user.value?.user_metadata
+// let userRole = metadata?.role
 const router = useRouter()
 
 const handleLoginPress = () => {
@@ -64,6 +78,27 @@ const handleHomePress = () => {
 const handleGoToCart = () => {
     router.push('/cart')
 }
+
+const handleGoToInventory = () => {
+    router.push('/inventory')
+}
+
+const handleGoToAdmin = () => {
+    console.log(" i want admin")
+    router.push('/admin')
+}
+
+const handleRoleCheck = async () => {
+    await roleStore.getUserRole()
+  
+}
+
+
+
+
+
+
+
 </script>
 
 <style scoped></style>
