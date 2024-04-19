@@ -3,15 +3,12 @@
         Enter the location of the store:
     </v-container>
     <v-container>
-        <v-autocomplete
-  label="Enter store location"
-    v-model="pickedLocation"
-  :items="storeArray.map(store => store.location)"
-></v-autocomplete>
+        <v-autocomplete label="Enter store location" v-model="pickedLocation"
+            :items="storeArray.map(store => store.location)"></v-autocomplete>
         <v-container>
             Store Location: {{ pickedLocation }}
         </v-container>
-        <!-- <div> {{ inventoryData }}</div> -->
+        <div> {{ inventoryData }}</div>
     </v-container>
     <v-table lazy density="compact">
         <thead>
@@ -46,7 +43,7 @@
                 <td>{{ item.size }}</td>
                 <td>P {{ item.price }}</td>
                 <td>{{ item.Vendor.fullname }}</td>
-                <td>{{item.product_type}}</td>
+                <td>{{ item.product_type }}</td>
                 <td>{{ item.remaining_stock }}</td>
             </tr>
         </tbody>
@@ -67,59 +64,60 @@ const locationArray = ref<string[]>([])
 const pickedLocation = ref<string | null>(null)
 
 //type joined from Product as base, joined by Store and Vendor
-type inventory = Database['public']['Tables']['Product']['Row'] & {
+type Inventory = Database['public']['Tables']['Product']['Row'] & {
     Store: Database['public']['Tables']['Store']['Row'],
     Vendor: Database['public']['Tables']['Vendor']['Row']
 }
 
-let inventoryKeys : string[] = []
+let inventoryKeys: string[] = []
 
-function logMembers(obj: inventory) {
-  const keys = Object.keys(obj) as (keyof inventory)[];
-  keys.forEach(key => {
-    const value = obj[key];
-    if (typeof value === 'object') {
-    const subKeys = value ? Object.keys(value) as (keyof Database['public']['Tables']['Store']['Row'])[] : [];
-      subKeys.forEach(subKey => {
-        inventoryKeys.push(`${key}.${subKey}`)
-        //console.log(`${key}.${subKey}`);
-      });
-    } else {
-        inventoryKeys.push(`${key}`)
-     // console.log(`${key}`);
-    }
-  });
+function logMembers(obj: Inventory) {
+    const keys = Object.keys(obj) as (keyof Inventory)[];
+    keys.forEach(key => {
+        const value = obj[key];
+        if (typeof value === 'object') {
+            const subKeys = value ? Object.keys(value) as (keyof Database['public']['Tables']['Store']['Row'])[] : [];
+            subKeys.forEach(subKey => {
+                inventoryKeys.push(`${key}.${subKey}`)
+                //console.log(`${key}.${subKey}`);
+            });
+        } else {
+            inventoryKeys.push(`${key}`)
+            // console.log(`${key}`);
+        }
+    });
 
-  //console.log(inventoryKeys)
+    //console.log(inventoryKeys)
 }
-type Measurement = { weight: number, length: number }; //nested foreign table
+// type StoreType = Database['public']['Tables']['Store']['Row']; //nested foreign table
+// type VendorType = Database['public']['Tables']['Vendor']['Row']; //nested foreign table
 type PropertyObject<T> = { value: T, render: boolean };
-type ExpandedType<T> = T extends object ? { [K in keyof T]: ExpandedType<T[K]> } : PropertyObject<T>; 
-type CorrectType = { age: number, name: string, Store: Measurement }; // base
+type ExpandedType<T> = T extends object ? { [K in keyof T]: ExpandedType<T[K]> } : PropertyObject<T>;
+// Inventory is  base
 function expandObject<T>(obj: T): ExpandedType<T> {
-  const expandedObj: any = {};
-  for (const key in obj) {
-    if (Object.hasOwnProperty.call(obj, key)) {
-      const value = obj[key];
-      if (typeof value === 'object') {
-        expandedObj[key] = expandObject(value);
-      } else {
-        expandedObj[key] = { value, render: true };
-      }
+    const expandedObj: any = {};
+    for (const key in obj) {
+        if (Object.hasOwnProperty.call(obj, key)) {
+            const value = obj[key];
+            if (typeof value === 'object') {
+                expandedObj[key] = expandObject(value);
+            } else {
+                expandedObj[key] = { value, render: true };
+            }
+        }
     }
-  }
-  return expandedObj;
+    return expandedObj;
 }
 
 const handleFetchStores = async () => {
     try {
-        const {data, error} = await supabase
+        const { data, error } = await supabase
             .from('Store')
             .select('*')
 
-        if( error) throw error
-        if(!error) {
-           // console.log(data)
+        if (error) throw error
+        if (!error) {
+            // console.log(data)
             storeArray.value = data
         }
 
@@ -131,15 +129,19 @@ const handleFetchStores = async () => {
         console.log(error)
     }
 }
-const inventoryArray = ref<inventory[]>([])
+const inventoryArray = ref<Inventory[]>([])
+const expandedInventoryArray = ref<ExpandedType<Inventory>[]>([])
+
+const inventoryData = ref<ExpandedType<Inventory> | null>(null)
+
 const handleFetchInventory = async () => {
     //need to get the store id from picked location
     const storeId = storeArray.value.find(store => store.location === pickedLocation.value)?.id
 
     try {
-        const { data , error } = await supabase
-   .from('Product')
-   .select(`
+        const { data, error } = await supabase
+            .from('Product')
+            .select(`
         *,
      Store!inner(
        *
@@ -148,14 +150,14 @@ const handleFetchInventory = async () => {
        *
      )
    `)
-   .match({ 'Store.id': storeId });
+            .match({ 'Store.id': storeId });
 
-        
-        if( error) throw error
-        if(!error) {
+
+        if (error) throw error
+        if (!error) {
             console.log(data)
-            inventoryArray.value = data as inventory[]
-          //  console.log("type: " + inventoryArray )
+            inventoryArray.value = data as Inventory[]
+            //  console.log("type: " + inventoryArray )
         }
     } catch (error) {
         console.log(error)
@@ -163,15 +165,31 @@ const handleFetchInventory = async () => {
     }
 
     logMembers(inventoryArray.value[0]);
+    
+    //expand the object adding render property
+    for(let i = 0 ; i < inventoryArray.value.length; i++){
+        expandedInventoryArray.value.push(expandObject(inventoryArray.value[i]))
+    }
+
+    for(let i = 0 ; i < expandedInventoryArray.value.length; i++){
+        console.log(expandedInventoryArray.value[i])
+    }
+    // console.log("index 0");
+    // console.log(expandedInventoryArray.value[1])
+    // inventoryData.value = expandedInventoryArray.value[1]
+
 }
 
 handleFetchStores()
 watch(pickedLocation, handleFetchInventory)
 
+
+
+
 </script>
 
 <style scoped>
-.header{
+.header {
     font-weight: bold;
     font-size: 16px;
     color: black;
