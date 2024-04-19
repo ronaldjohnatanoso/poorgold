@@ -134,16 +134,16 @@ function logMembers(obj: Inventory) {
 type PropertyObject<T> = { value: T, render: boolean, propertyName: string};
 type ExpandedType<T> = T extends object ? { [K in keyof T]: ExpandedType<T[K]> } : PropertyObject<T>;
 // Inventory is  base
-function expandObject<T>(obj: T): ExpandedType<T> {
+function expandObject<T>(obj: T, parentPropertyName: string = ''): ExpandedType<T> {
     const expandedObj: any = {};
     for (const key in obj) {
         if (Object.hasOwnProperty.call(obj, key)) {
             const value = obj[key];
-            const propertyName = key;
+            const propertyName = parentPropertyName ? `${parentPropertyName}_${key}` : key;
             if (value === null) {
                 expandedObj[key] = { value: null, render: true, propertyName };
             } else if (typeof value === 'object') {
-                expandedObj[key] = expandObject(value);
+                expandedObj[key] = expandObject(value, propertyName);
             } else {
                 expandedObj[key] = { value, render: true, propertyName };
             }
