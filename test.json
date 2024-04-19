@@ -1,0 +1,107 @@
+{
+    "id": {
+        "value": 7,
+        "render": true,
+        "propertyName": "id"
+    },
+    "created_at": {
+        "value": "2024-04-18T09:47:43.16088+00:00",
+        "render": true,
+        "propertyName": "created_at"
+    },
+    "name": {
+        "value": "dried fish",
+        "render": true,
+        "propertyName": "name"
+    },
+    "vendor_id": {
+        "value": 1,
+        "render": true,
+        "propertyName": "vendor_id"
+    },
+    "store_id": {
+        "value": 2,
+        "render": true,
+        "propertyName": "store_id"
+    },
+    "brand": {
+        "value": "nike",
+        "render": true,
+        "propertyName": "brand"
+    },
+    "product_type": {
+        "value": "food",
+        "render": true,
+        "propertyName": "product_type"
+    },
+    "size": {
+        "value": "large",
+        "render": true,
+        "propertyName": "size"
+    },
+    "parent_product_type": {
+        "value": null,
+        "render": true,
+        "propertyName": "parent_product_type"
+    },
+    "price": {
+        "value": 121,
+        "render": true,
+        "propertyName": "price"
+    },
+    "description": {
+        "value": "very nice dried fish bulad",
+        "render": true,
+        "propertyName": "description"
+    },
+    "remaining_stock": {
+        "value": 44,
+        "render": true,
+        "propertyName": "remaining_stock"
+    },
+    "Store_id": {
+        "value": 2,
+        "render": true,
+        "propertyName": "Store_id"
+    },
+    "Store_location": {
+        "value": "website",
+        "render": true,
+        "propertyName": "Store_location"
+    },
+    "Store_time_open": {
+        "value": "all day",
+        "render": true,
+        "propertyName": "Store_time_open"
+    },
+    "Store_created_at": {
+        "value": "2024-04-17T13:02:13.646413+00:00",
+        "render": true,
+        "propertyName": "Store_created_at"
+    },
+    "Store_contact_number": {
+        "value": 1111,
+        "render": true,
+        "propertyName": "Store_contact_number"
+    },
+    "Vendor_id": {
+        "value": 1,
+        "render": true,
+        "propertyName": "Vendor_id"
+    },
+    "Vendor_fullname": {
+        "value": "atanoso vendor",
+        "render": true,
+        "propertyName": "Vendor_fullname"
+    },
+    "Vendor_created_at": {
+        "value": "2024-04-17T02:19:44.461768+00:00",
+        "render": true,
+        "propertyName": "Vendor_created_at"
+    },
+    "Vendor_contact_number": {
+        "value": 1234,
+        "render": true,
+        "propertyName": "Vendor_contact_number"
+    }
+}
