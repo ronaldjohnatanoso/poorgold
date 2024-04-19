@@ -8,7 +8,7 @@
         <v-container>
             Store Location: {{ pickedLocation }}
         </v-container>
-        <div> {{ expandedInventoryArray[0] }} = length  = {{expandedInventoryArray.length}}</div>
+        <div> {{ expandedInventoryArray[0] }} = length = {{ expandedInventoryArray.length }}</div>
     </v-container>
     <v-table lazy density="compact">
 
@@ -45,33 +45,35 @@
                 <th class="header text-left"
                     v-if="expandedInventoryArray && expandedInventoryArray[0].remaining_stock.render">{{ "Product_" +
                         expandedInventoryArray[0].remaining_stock.propertyName }}</th>
-                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].Store.id.render">
-                    {{ "Store_" + expandedInventoryArray[0].Store.id.propertyName }}</th>
                 <th class="header text-left"
-                    v-if="expandedInventoryArray && expandedInventoryArray[0].Store.location.render">{{ "Store_" +
-                        expandedInventoryArray[0].Store.location.propertyName }}</th>
+                    v-if="expandedInventoryArray && expandedInventoryArray[0]?.store_id.render">{{ "Store_" +
+                        expandedInventoryArray[0].store_id.propertyName }}</th>
                 <th class="header text-left"
-                    v-if="expandedInventoryArray && expandedInventoryArray[0].Store.time_open.render">{{ "Store_" +
-                        expandedInventoryArray[0].Store.time_open.propertyName }}</th>
+                    v-if="expandedInventoryArray && expandedInventoryArray[0]?.Store_location.render">{{ "Store_" +
+                        expandedInventoryArray[0].Store_location.propertyName }}</th>
                 <th class="header text-left"
-                    v-if="expandedInventoryArray && expandedInventoryArray[0].Store.created_at.render">{{ "Store_" +
-                        expandedInventoryArray[0].Store.created_at.propertyName }}</th>
+                    v-if="expandedInventoryArray && expandedInventoryArray[0].Store_time_open.render">{{ "Store_" +
+                        expandedInventoryArray[0].Store_time_open.propertyName }}</th>
                 <th class="header text-left"
-                    v-if="expandedInventoryArray && expandedInventoryArray[0].Store.contact_number.render">{{ "Store_" +
-                        expandedInventoryArray[0].Store.contact_number.propertyName }}</th>
+                    v-if="expandedInventoryArray && expandedInventoryArray[0].Store_created_at.render">{{ "Store_" +
+                        expandedInventoryArray[0].Store_created_at.propertyName }}</th>
                 <th class="header text-left"
-                    v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor.id.render">{{ "Vendor_" +
-                        expandedInventoryArray[0].Vendor.id.propertyName }}</th>
+                    v-if="expandedInventoryArray && expandedInventoryArray[0].Store_contact_number.render">{{ "Store_"
+                        +
+                        expandedInventoryArray[0].Store_contact_number.propertyName }}</th>
                 <th class="header text-left"
-                    v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor.fullname.render">{{ "Vendor_" +
-                        expandedInventoryArray[0].Vendor.fullname.propertyName }}</th>
+                    v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor_id.render">{{ "Vendor_" +
+                        expandedInventoryArray[0].Vendor_id.propertyName }}</th>
                 <th class="header text-left"
-                    v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor.created_at.render">{{ "Vendor_" +
-                        expandedInventoryArray[0].Vendor.created_at.propertyName }}</th>
+                    v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor_fullname.render">{{ "Vendor_" +
+                        expandedInventoryArray[0].Vendor_fullname.propertyName }}</th>
                 <th class="header text-left"
-                    v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor.contact_number.render">{{ "Vendor_"
-                        + expandedInventoryArray[0].Vendor.contact_number.propertyName }}</th>
-
+                    v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor_created_at.render">{{ "Vendor_" +
+                        expandedInventoryArray[0].Vendor_created_at.propertyName }}</th>
+                <th class="header text-left"
+                    v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor_contact_number.render">{{
+                        "Vendor_"
+                        + expandedInventoryArray[0].Vendor_contact_number.propertyName }}</th>
             </tr>
 
         </thead>
@@ -80,27 +82,7 @@
         <tbody>
 
             <tr v-for="item in expandedInventoryArray">
-                <td v-if="item.id.render">{{ item.id.value || 'NULL' }}</td>
-                <td v-if="item.created_at.render">{{ item.created_at.value || 'NULL' }}</td>
-                <td v-if="item.name.render">{{ item.name.value || 'NULL' }}</td>
-                <td v-if="item.vendor_id.render">{{ item.vendor_id.value || 'NULL' }}</td>
-                <td v-if="item.store_id.render">{{ item.store_id.value || 'NULL' }}</td>
-                <td v-if="item.brand.render">{{ item.brand.value || 'NULL' }}</td>
-                <td v-if="item.product_type.render">{{ item.product_type.value || 'NULL' }}</td>
-                <td v-if="item.parent_product_type.render">{{ item.parent_product_type.value || 'NULL' }}</td>
-                <td v-if="item.size.render">{{ item.size.value || 'NULL' }}</td>
-                <td v-if="item.price.render">{{ item.price.value || 'NULL' }}</td>
-                <td v-if="item.description.render">{{ item.description.value || 'NULL' }}</td>
-                <td v-if="item.remaining_stock.render">{{ item.remaining_stock.value || 'NULL' }}</td>
-                <td v-if="item.Store.id.render">{{ item.Store.id.value || 'NULL' }}</td>
-                <td v-if="item.Store.location.render">{{ item.Store.location.value || 'NULL' }}</td>
-                <td v-if="item.Store.time_open.render">{{ item.Store.time_open.value || 'NULL' }}</td>
-                <td v-if="item.Store.created_at.render">{{ item.Store.created_at.value || 'NULL' }}</td>
-                <td v-if="item.Store.contact_number.render">{{ item.Store.contact_number.value || 'NULL' }}</td>
-                <td v-if="item.Vendor.id.render">{{ item.Vendor.id.value || 'NULL' }}</td>
-                <td v-if="item.Vendor.fullname.render">{{ item.Vendor.fullname.value || 'NULL' }}</td>
-                <td v-if="item.Vendor.created_at.render">{{ item.Vendor.created_at.value || 'NULL' }}</td>
-                <td v-if="item.Vendor.contact_number.render">{{ item.Vendor.contact_number.value || 'NULL' }}</td>
+
             </tr>
         </tbody>
     </v-table>
@@ -157,10 +139,14 @@ function logMembers(obj: Inventory) {
 }
 // type StoreType = Database['public']['Tables']['Store']['Row']; //nested foreign table
 // type VendorType = Database['public']['Tables']['Vendor']['Row']; //nested foreign table
-type PropertyObject<T> = { value: T, render: boolean, propertyName: string };
-type ExpandedType<T> = T extends object ? { [K in keyof T]: ExpandedType<T[K]> } : PropertyObject<T>;
-// Inventory is  base
-function expandObject<T>(obj: T, parentPropertyName: string = ''): ExpandedType<T> {
+type PropertyObject<T> = { value: T; render: boolean; propertyName: string };
+type ExpandedType<T> = T extends object
+    ? T extends Array<infer U>
+    ? Array<ExpandedType<U>>
+    : { [K in keyof T]: ExpandedType<T[K]> }
+    : PropertyObject<T>;
+
+function expandObject<T>(obj: T, parentPropertyName: string = ''): any{
     const expandedObj: any = {};
     for (const key in obj) {
         if (Object.hasOwnProperty.call(obj, key)) {
@@ -199,7 +185,38 @@ const handleFetchStores = async () => {
     }
 }
 const inventoryArray = ref<Inventory[]>([])
-const expandedInventoryArray = ref<ExpandedType<Inventory>[]>([])
+type ExpandedInventory = {
+    [Property in
+    | 'id'
+    | 'created_at'
+    | 'name'
+    | 'vendor_id'
+    | 'store_id'
+    | 'brand'
+    | 'product_type'
+    | 'size'
+    | 'parent_product_type'
+    | 'price'
+    | 'description'
+    | 'remaining_stock'
+    | 'Store_id'
+    | 'Store_location'
+    | 'Store_time_open'
+    | 'Store_created_at'
+    | 'Store_contact_number'
+    | 'Vendor_id'
+    | 'Vendor_fullname'
+    | 'Vendor_created_at'
+    | 'Vendor_contact_number'
+    ]:
+    {
+        value: any;
+        render: boolean;
+        propertyName: string;
+    };
+};
+
+const expandedInventoryArray = ref<ExpandedInventory[]>([]);
 
 const inventoryData = ref<ExpandedType<Inventory> | null>(null)
 const storeIdd = ref<string>("")
@@ -240,7 +257,7 @@ const handleFetchInventory = async () => {
 
     //flattenObject(inventoryArray.value)
 
-    for(let i=0;i<inventoryArray.value.length;i++){
+    for (let i = 0; i < inventoryArray.value.length; i++) {
         inventoryArray.value[i] = flattenObject(inventoryArray.value[i])
     }
 
@@ -252,19 +269,12 @@ const handleFetchInventory = async () => {
 
     //storeIdd.value = flattenedInventoryArray[0].Store_id.value
     //
- 
+
 
     for (let i = 0; i < expandedInventoryArray.value.length; i++) {
         console.log(expandedInventoryArray.value[i])
     }
-    // console.log("index 0");
-    // console.log(expandedInventoryArray.value[1])
-    // console.log("parent")
-    inventoryData.value = expandedInventoryArray.value[1]
 
-    // console.log(inventoryArray.value[0])
-    // console.log("after-------------------------------------------------------")
-    // console.log(expandedInventoryArray.value[0])
 
 
 }
@@ -277,7 +287,7 @@ function flattenObject(obj: any, prefix = ''): any {
 
     for (const key in obj) {
         const value = obj[key];
-        const newKey  = prefix ? `${prefix}_${key}` : key;
+        const newKey = prefix ? `${prefix}_${key}` : key;
 
         if (typeof value === 'object' && value !== null) {
             Object.assign(result, flattenObject(value, newKey));
@@ -285,10 +295,10 @@ function flattenObject(obj: any, prefix = ''): any {
             result[newKey] = value;
         }
     }
-  
+
     return result;
-  }
-  
+}
+
 
 
 

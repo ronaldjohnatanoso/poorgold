@@ -110,3 +110,35 @@ function expandObject<T>(obj: T): ExpandedType<T> {
 const cat: CorrectType = { age: 23, name: 'dick', Store: { weight: 21, length: 23 } };
 const expandedCat: ExpandedType<CorrectType> = expandObject(cat);
 console.log(expandedCat.Store.length.value); // Correct type
+
+
+
+// to activate intellisense with types that are also wildcard
+    type ExpandedInventory = {
+  [Property in
+    | 'id'
+    | 'created_at'
+    | 'name'
+    | 'vendor_id'
+    | 'store_id'
+    | 'brand'
+    | 'product_type'
+    | 'size'
+    | 'parent_product_type'
+    | 'price'
+    | 'description'
+    | 'remaining_stock'
+    | 'Store_id'
+    | 'Store_location'
+    | 'Store_time_open'
+    | 'Store_created_at'
+    | 'Store_contact_number'
+    | 'Vendor_id'
+    | 'Vendor_fullname'
+    | 'Vendor_created_at'
+    | 'Vendor_contact_number'
+  ]: {
+    value: any;
+    render: boolean;
+    propertyName: string;
+  };
