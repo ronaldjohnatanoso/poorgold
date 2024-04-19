@@ -90,7 +90,25 @@ function logMembers(obj: inventory) {
     }
   });
 
-  console.log(inventoryKeys)
+  //console.log(inventoryKeys)
+}
+type Measurement = { weight: number, length: number }; //nested foreign table
+type PropertyObject<T> = { value: T, render: boolean };
+type ExpandedType<T> = T extends object ? { [K in keyof T]: ExpandedType<T[K]> } : PropertyObject<T>; 
+type CorrectType = { age: number, name: string, Store: Measurement }; // base
+function expandObject<T>(obj: T): ExpandedType<T> {
+  const expandedObj: any = {};
+  for (const key in obj) {
+    if (Object.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      if (typeof value === 'object') {
+        expandedObj[key] = expandObject(value);
+      } else {
+        expandedObj[key] = { value, render: true };
+      }
+    }
+  }
+  return expandedObj;
 }
 
 const handleFetchStores = async () => {

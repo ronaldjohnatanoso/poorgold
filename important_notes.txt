@@ -55,12 +55,12 @@ type Measurement = {
 
 type correctType = {
   age: number,
-  name: string,
+  name: string,~
   Store: Measurement
 };
 
 const cat: correctType = {
-  age: 23,
+  age: 23,~
   name: 'dick',
   Store: {
     weight: 21,
@@ -87,10 +87,10 @@ logMembers(cat);
 
 
 //this is to expanded object keys with {value, render: boolean} to only leaf values, this adds choice whether we want to render that evne in nested
-type Measurement = { weight: number, length: number };
+type Measurement = { weight: number, length: number }; //nested foreign table
 type PropertyObject<T> = { value: T, render: boolean };
-type ExpandedType<T> = T extends object ? { [K in keyof T]: ExpandedType<T[K]> } : PropertyObject<T>;
-type CorrectType = { age: number, name: string, Store: Measurement };
+type ExpandedType<T> = T extends object ? { [K in keyof T]: ExpandedType<T[K]> } : PropertyObject<T>; 
+type CorrectType = { age: number, name: string, Store: Measurement }; // base
 
 function expandObject<T>(obj: T): ExpandedType<T> {
   const expandedObj: any = {};
