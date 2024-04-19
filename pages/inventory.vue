@@ -8,43 +8,64 @@
         <v-container>
             Store Location: {{ pickedLocation }}
         </v-container>
-        <div> {{ inventoryData }}</div>
+        <div> {{ expandedInventoryArray[0]}}</div>
     </v-container>
     <v-table lazy density="compact">
+   
+        
         <thead>
-            <tr>
-                <th class="header text-left">
-                    Product Name
-                </th>
-                <th class="header text-left">
-                    Brand
-                </th>
-                <th class="header text-left">
-                    Size
-                </th>
-                <th class="header text-left">
-                    Price
-                </th>
-                <th class="header text-left">
-                    Vendor
-                </th>
-                <th class="header text-left">
-                    Product Type
-                </th>
-                <th class="header text-left">
-                    Remaining Stock
-                </th>
-            </tr>
+             <tr v-if="expandedInventoryArray.length != 0" >
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].id.render">{{ "Product_" + expandedInventoryArray[0].id.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].created_at.render">{{ "Product_" + expandedInventoryArray[0].created_at.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].name.render">{{ "Product_" + expandedInventoryArray[0].name.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].vendor_id.render">{{ "Product_" + expandedInventoryArray[0].vendor_id.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].store_id.render">{{ "Product_" + expandedInventoryArray[0].store_id.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].brand.render">{{ "Product_" + expandedInventoryArray[0].brand.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].product_type.render">{{ "Product_" + expandedInventoryArray[0].product_type.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].parent_product_type.render">{{ "Product_" + expandedInventoryArray[0].parent_product_type.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].size.render">{{ "Product_" + expandedInventoryArray[0].size.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].price.render">{{ "Product_" + expandedInventoryArray[0].price.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].description.render">{{ "Product_" + expandedInventoryArray[0].description.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].remaining_stock.render">{{ "Product_" + expandedInventoryArray[0].remaining_stock.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].Store.id.render">{{ "Store_" + expandedInventoryArray[0].Store.id.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].Store.location.render">{{ "Store_" + expandedInventoryArray[0].Store.location.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].Store.time_open.render">{{ "Store_" + expandedInventoryArray[0].Store.time_open.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].Store.created_at.render">{{ "Store_" + expandedInventoryArray[0].Store.created_at.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].Store.contact_number.render">{{ "Store_" + expandedInventoryArray[0].Store.contact_number.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor.id.render">{{ "Vendor_" + expandedInventoryArray[0].Vendor.id.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor.fullname.render">{{ "Vendor_" + expandedInventoryArray[0].Vendor.fullname.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor.created_at.render">{{ "Vendor_" + expandedInventoryArray[0].Vendor.created_at.propertyName }}</th>
+                <th class="header text-left" v-if="expandedInventoryArray && expandedInventoryArray[0].Vendor.contact_number.render">{{ "Vendor_" + expandedInventoryArray[0].Vendor.contact_number.propertyName }}</th>
+                
+            </tr> 
+        
         </thead>
+
+
         <tbody>
-            <tr v-for="item in inventoryArray" :key="item.id">
-                <td>{{ item.name }}</td>
-                <td>{{ item.brand }}</td>
-                <td>{{ item.size }}</td>
-                <td>P {{ item.price }}</td>
-                <td>{{ item.Vendor.fullname }}</td>
-                <td>{{ item.product_type }}</td>
-                <td>{{ item.remaining_stock }}</td>
+       
+                <tr v-for="item in expandedInventoryArray">
+                    <td v-if="item.id.render">{{ item.id.value || 'NULL' }}</td>
+                    <td v-if="item.created_at.render">{{ item.created_at.value || 'NULL' }}</td>
+                    <td v-if="item.name.render">{{ item.name.value || 'NULL' }}</td>
+                    <td v-if="item.vendor_id.render">{{ item.vendor_id.value || 'NULL' }}</td>
+                    <td v-if="item.store_id.render">{{ item.store_id.value || 'NULL' }}</td>
+                    <td v-if="item.brand.render">{{ item.brand.value || 'NULL' }}</td>
+                    <td v-if="item.product_type.render">{{ item.product_type.value || 'NULL' }}</td>
+                    <td v-if="item.parent_product_type.render">{{ item.parent_product_type.value || 'NULL' }}</td>
+                    <td v-if="item.size.render">{{ item.size.value || 'NULL' }}</td>
+                    <td v-if="item.price.render">{{ item.price.value || 'NULL' }}</td>
+                    <td v-if="item.description.render">{{ item.description.value || 'NULL' }}</td>
+                    <td v-if="item.remaining_stock.render">{{ item.remaining_stock.value || 'NULL' }}</td>
+                    <td v-if="item.Store.id.render">{{ item.Store.id.value || 'NULL' }}</td>
+                    <td v-if="item.Store.location.render">{{ item.Store.location.value || 'NULL' }}</td>
+                    <td v-if="item.Store.time_open.render">{{ item.Store.time_open.value || 'NULL' }}</td>
+                    <td v-if="item.Store.created_at.render">{{ item.Store.created_at.value || 'NULL' }}</td>
+                    <td v-if="item.Store.contact_number.render">{{ item.Store.contact_number.value || 'NULL' }}</td>
+                    <td v-if="item.Vendor.id.render">{{ item.Vendor.id.value || 'NULL' }}</td>
+                    <td v-if="item.Vendor.fullname.render">{{ item.Vendor.fullname.value || 'NULL' }}</td>
+                    <td v-if="item.Vendor.created_at.render">{{ item.Vendor.created_at.value || 'NULL' }}</td>
+                    <td v-if="item.Vendor.contact_number.render">{{ item.Vendor.contact_number.value || 'NULL' }}</td>
             </tr>
         </tbody>
     </v-table>
@@ -57,6 +78,25 @@ definePageMeta({
     middleware: ["profile-auth"],
     layout: "topbar-layout",
 })
+function isLeafProperty(property: any) {
+    if (typeof property === 'object') {
+        // Check if the property is an object with a 'render' property
+        return property.hasOwnProperty('render');
+    } else {
+        // The property is not an object, so it's a leaf property
+        return true;
+    }
+}
+
+function getPropertyName(property: any) {
+    if (typeof property === 'object' && property.hasOwnProperty('propertyName')) {
+        return property.propertyName;
+    } else if (typeof property === 'object') {
+        return 'Object';
+    } else {
+        return 'Value';
+    }
+}
 
 const supabase = useSupabaseClient()
 const storeArray = ref<Database['public']['Tables']['Store']['Row'][]>([])
@@ -91,7 +131,7 @@ function logMembers(obj: Inventory) {
 }
 // type StoreType = Database['public']['Tables']['Store']['Row']; //nested foreign table
 // type VendorType = Database['public']['Tables']['Vendor']['Row']; //nested foreign table
-type PropertyObject<T> = { value: T, render: boolean };
+type PropertyObject<T> = { value: T, render: boolean, propertyName: string};
 type ExpandedType<T> = T extends object ? { [K in keyof T]: ExpandedType<T[K]> } : PropertyObject<T>;
 // Inventory is  base
 function expandObject<T>(obj: T): ExpandedType<T> {
@@ -99,10 +139,13 @@ function expandObject<T>(obj: T): ExpandedType<T> {
     for (const key in obj) {
         if (Object.hasOwnProperty.call(obj, key)) {
             const value = obj[key];
-            if (typeof value === 'object') {
+            const propertyName = key;
+            if (value === null) {
+                expandedObj[key] = { value: null, render: true, propertyName };
+            } else if (typeof value === 'object') {
                 expandedObj[key] = expandObject(value);
             } else {
-                expandedObj[key] = { value, render: true };
+                expandedObj[key] = { value, render: true, propertyName };
             }
         }
     }
@@ -133,11 +176,14 @@ const inventoryArray = ref<Inventory[]>([])
 const expandedInventoryArray = ref<ExpandedType<Inventory>[]>([])
 
 const inventoryData = ref<ExpandedType<Inventory> | null>(null)
-
+const storeIdd = ref<string>("")
 const handleFetchInventory = async () => {
+    //clear the expanded array
+    expandedInventoryArray.value = []
+
     //need to get the store id from picked location
     const storeId = storeArray.value.find(store => store.location === pickedLocation.value)?.id
-
+    
     try {
         const { data, error } = await supabase
             .from('Product')
@@ -164,7 +210,10 @@ const handleFetchInventory = async () => {
 
     }
 
-    logMembers(inventoryArray.value[0]);
+    //logMembers(inventoryArray.value[0]);
+    
+
+
     
     //expand the object adding render property
     for(let i = 0 ; i < inventoryArray.value.length; i++){
@@ -176,7 +225,13 @@ const handleFetchInventory = async () => {
     }
     // console.log("index 0");
     // console.log(expandedInventoryArray.value[1])
-    // inventoryData.value = expandedInventoryArray.value[1]
+    console.log("parent")
+    inventoryData.value = expandedInventoryArray.value[1]
+
+        console.log(inventoryArray.value[0])
+        console.log("after-------------------------------------------------------")
+        console.log(expandedInventoryArray.value[0])
+        
 
 }
 

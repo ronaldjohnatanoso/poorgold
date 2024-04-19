@@ -1,6 +1,6 @@
 <template >
 
-    <v-app class="max-h-20 ">
+    <v-app class="max-h-10 overflow-auto">
         
         <v-app-bar class="p-2">
             <img class="max-w-[50px]" src="/images/png/logo-no-background.png" alt="">
