@@ -82,7 +82,27 @@
         <tbody>
 
             <tr v-for="item in expandedInventoryArray">
-
+                <td v-if="item.id.render">{{ item.id.value || 'NULL' }}</td>
+                <td v-if="item.created_at.render">{{ item.created_at.value || 'NULL' }}</td>
+                <td v-if="item.name.render">{{ item.name.value || 'NULL' }}</td>
+                <td v-if="item.vendor_id.render">{{ item.vendor_id.value || 'NULL' }}</td>
+                <td v-if="item.store_id.render">{{ item.store_id.value || 'NULL' }}</td>
+                <td v-if="item.brand.render">{{ item.brand.value || 'NULL' }}</td>
+                <td v-if="item.product_type.render">{{ item.product_type.value || 'NULL' }}</td>
+                <td v-if="item.parent_product_type.render">{{ item.parent_product_type.value || 'NULL' }}</td>
+                <td v-if="item.size.render">{{ item.size.value || 'NULL' }}</td>
+                <td v-if="item.price.render">{{ item.price.value || 'NULL' }}</td>
+                <td v-if="item.description.render">{{ item.description.value || 'NULL' }}</td>
+                <td v-if="item.remaining_stock.render">{{ item.remaining_stock.value || 'NULL' }}</td>
+                <td v-if="item.Store_id.render">{{ item.Store_id.value || 'NULL' }}</td>
+                <td v-if="item.Store_location.render">{{ item.Store_location.value || 'NULL' }}</td>
+                <td v-if="item.Store_time_open.render">{{ item.Store_time_open.value || 'NULL' }}</td>
+                <td v-if="item.Store_created_at.render">{{ item.Store_created_at.value || 'NULL' }}</td>
+                <td v-if="item.Store_contact_number.render">{{ item.Store_contact_number.value || 'NULL' }}</td>
+                <td v-if="item.Vendor_id.render">{{ item.Vendor_id.value || 'NULL' }}</td>
+                <td v-if="item.Vendor_fullname.render">{{ item.Vendor_fullname.value || 'NULL' }}</td>
+                <td v-if="item.Vendor_created_at.render">{{ item.Vendor_created_at.value || 'NULL' }}</td>
+                <td v-if="item.Vendor_contact_number.render">{{ item.Vendor_contact_number.value || 'NULL' }}</td>
             </tr>
         </tbody>
     </v-table>
