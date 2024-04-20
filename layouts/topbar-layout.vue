@@ -23,6 +23,7 @@
                     <v-btn @click="handleGoToInventory" v-if="userRole === 'employee'" :color="$route.path === '/inventory' ? 'purple' : undefined">Inventory</v-btn>
                     <v-btn @click="handleGoToPurchases" v-if="userRole === 'employee'" :color="$route.path === '/purchases' ? 'purple' : undefined">Purchases</v-btn>
                     <v-btn @click="handleGoToAdmin" v-if="user && userRole =='admin'" :color="$route.path === '/admin' ? 'purple' : undefined">Admin Page</v-btn>
+                    <v-btn @click="handleGoToReorder" v-if="user && userRole =='vendor'" :color="$route.path === '/reorder' ? 'purple' : undefined">Reorder</v-btn>
                     <v-btn @click="handleRoleCheck" class="bg-red-300">role: {{ userRole }}</v-btn>
                     
                   </div>
@@ -36,6 +37,8 @@
 </template>
 
 <script setup lang="ts">
+
+
 
 let user = useSupabaseUser()
 const roleStore = useRoleStore()
@@ -55,6 +58,10 @@ const handleProfile = () => {
 
 const handleRegisterPress = () => {
     router.push('/register')
+}
+
+const handleGoToReorder = () => {
+    router.push('/reorder')
 }
 
 const handleHomePress = () => {

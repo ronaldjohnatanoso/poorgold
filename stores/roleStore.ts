@@ -28,7 +28,17 @@ export const useRoleStore = defineStore({
             } catch (error) {
                 console.log(error)
             }
+        },
+
+      async getUserId(){
+        try {
+          const user = await useSupabaseUser()
+          return user.value?.id as string
+        } catch (error) {
+          console.log(error)
         }
+
+      }
   },
 });
 
