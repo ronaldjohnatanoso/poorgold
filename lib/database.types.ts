@@ -108,6 +108,55 @@ export type Database = {
           },
         ]
       }
+      Purchase: {
+        Row: {
+          created_at: string
+          customer_id: string | null
+          id: number
+          product_id: number
+          quantity: number
+          store_id: number
+        }
+        Insert: {
+          created_at?: string
+          customer_id?: string | null
+          id?: number
+          product_id: number
+          quantity?: number
+          store_id: number
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string | null
+          id?: number
+          product_id?: number
+          quantity?: number
+          store_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_Purchase_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "user"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_Purchase_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "Product"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_Purchase_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "Store"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Sale: {
         Row: {
           created_at: string

@@ -1,6 +1,6 @@
 <template >
 
-    <v-app class="max-h-10 overflow-auto">
+    <v-app class="max-h-20 overflow-auto">
         
         <v-app-bar class="p-2">
             <img class="max-w-[50px]" src="/images/png/logo-no-background.png" alt="">
@@ -10,36 +10,22 @@
 
 
                 <div class="bg-yellow-300"> 
-                    <v-btn class="bg-yellow-300">
+                    <v-btn class="bg-red-300 !important"  >
                         Poor Gold
                     </v-btn>
                 </div>
                 <div id="signin" class="p-2 space-x-5 bg-blue-300">
-                    <v-btn v-if="!user" @click="handleLoginPress">
-                        Login
-                    </v-btn>
-                    <v-btn v-if="!user" @click="handleRegisterPress">
-                        Register
-                    </v-btn>
-                    <v-btn @click="handleHomePress">
-                        Home
-                    </v-btn>
-                    <v-btn @click="handleProfile" v-if="user">
-                        Profile
-                    </v-btn>
-                    <v-btn @click="handleGoToCart" v-if="user && userRole=='customer'">
-                        My Cart
-                    </v-btn>
-                    <v-btn @click="handleGoToInventory" v-if=" userRole ==='employee'">
-                        Inventory
-                    </v-btn>
-                    <v-btn @click="handleGoToAdmin" v-if="user && userRole =='admin'">
-                        Admin Page
-                    </v-btn>
-                    <v-btn @click="handleRoleCheck" class="bg-red-300">
-                        role : {{ userRole}}
-                    </v-btn>
-                </div>
+                    <v-btn v-if="!user" @click="handleLoginPress" color="purple">Login</v-btn>
+                    <v-btn v-if="!user" @click="handleRegisterPress" color="purple">Register</v-btn>
+                    <v-btn @click="handleHomePress" :color="$route.path === '/' ? 'purple' : undefined">Home</v-btn>
+                    <v-btn @click="handleProfile"  v-if="user" :color="$route.path === '/profile' ? 'purple' : undefined"   >Profile</v-btn>
+                    <v-btn @click="handleGoToCart" v-if="user && userRole=='customer'" :color="$route.path === '/cart' ? 'purple' : undefined">My Cart</v-btn>
+                    <v-btn @click="handleGoToInventory" v-if="userRole === 'employee'" :color="$route.path === '/inventory' ? 'purple' : undefined">Inventory</v-btn>
+                    <v-btn @click="handleGoToPurchases" v-if="userRole === 'employee'" :color="$route.path === '/purchases' ? 'purple' : undefined">Purchases</v-btn>
+                    <v-btn @click="handleGoToAdmin" v-if="user && userRole =='admin'" :color="$route.path === '/admin' ? 'purple' : undefined">Admin Page</v-btn>
+                    <v-btn @click="handleRoleCheck" class="bg-red-300">role: {{ userRole }}</v-btn>
+                    
+                  </div>
             </v-container>
         </v-app-bar>
     
@@ -93,6 +79,9 @@ const handleRoleCheck = async () => {
   
 }
 
+const handleGoToPurchases = () => {
+    router.push('/purchases')
+}
 
 
 
