@@ -1,24 +1,24 @@
 <template>
-    <div>
+    <v-container>
         email: {{ user ? user.email : '' }}
-    </div>
-    <div>
+    </v-container>
+    <v-container>
         role: {{ userRole }}
-    </div>
+    </v-container>
 
-    <div>
-        full: {{ userFullName }}
-    </div>
-    <div>
+    <v-container>
+        fullname: {{ userFullName }}
+    </v-container>
+    <v-container>
         id: {{ user ? user.id : '' }}
-    </div>
+    </v-container>
     <!-- <data_check /> -->
-    <div>
+    <v-container>
         <v-btn  @click="handleLogout">Logout>
           
         </v-btn>
-    </div>
-    <ProductCheck />
+    </v-container>
+    <!-- <ProductCheck /> -->
 </template>
 
 <script setup lang="ts">

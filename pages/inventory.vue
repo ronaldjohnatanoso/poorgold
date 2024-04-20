@@ -20,13 +20,21 @@
           <v-col cols="12" md="6">
             <v-dialog v-model="dialogOpen" transition="dialog-bottom-transition" width="auto">
               <v-card>
-                <v-toolbar title="Product Update and Reorder">{{selected?.name}}</v-toolbar>
+                <v-toolbar title="Product Update and Reorder">{{correctSingleSelected?.name}}</v-toolbar>
 
                 <v-card-text class="text-h2 pa-12">
-                  obj: {{ selected[0] }}
+                  Name: {{  correctSingleSelected?.name}} <br>
+                  Price: P{{ correctSingleSelected?.price}}
                   <br>
-                  string : {{selected[0].name}}
+                  Remaining stock : {{correctSingleSelected?.remaining_stock}} <br>
+                  Vendor: {{correctSingleSelected?.Vendor_fullname}} <br>
                 </v-card-text>
+                <v-select v-model="reorderQuantity" 
+                label="Select quantity to be added"
+                :items="[5,10,20,50,100]"
+              ></v-select>
+               
+                <v-btn @click="handleReorderRequest">Request Reorder</v-btn>
 
                 <v-card-actions class="justify-end">
                   <v-btn text="Close" @click="dialogOpen = false"></v-btn>
@@ -49,10 +57,10 @@
       </v-btn>
 
       <v-data-table :items="inventoryArray" :search="search" :headers="visibleHeaders" select-strategy="single"
-        show-select v-model-value="selected" @update:model-value="handleProductSelect($event as Inventory)"
+        show-select v-model-value="selected" @update:model-value="handleProductSelect($event as FlattenedInventory)"
         item-value="id" return-object></v-data-table>
 
-      <pre>{{ selected }}</pre>
+      <pre>{{ correctSingleSelected }}</pre>
     </v-card>
   </v-container>
 </template>
@@ -64,18 +72,21 @@ definePageMeta({
   middleware: ["employee-only-auth"],
   layout: "topbar-layout",
 });
-
-
-
+import type { FlattenedInventory } from '~/stores/table';
 const supabase = useSupabaseClient();
 const storeArray = ref<Database['public']['Tables']['Store']['Row'][]>([]);
 const locationArray = ref<string[]>([]);
 const pickedLocation = ref<string | null>(null);
 const dialogOpen = ref(false);
-const handleProductSelect = (value: Inventory) => {
+const reorderQuantity = ref<number | null>(null);
+const handleReorderRequest = async () => {
+  console.log(reorderQuantity.value);
+};
+const handleProductSelect = (value: FlattenedInventory) => {
   selected.value = value;
   dialogOpen.value = true;
   console.log(selected.value.name);
+  correctSingleSelected.value = selected.value[0] 
 };
 
 //type joined from Product as base, joined by Store and Vendor
@@ -84,36 +95,14 @@ type Inventory = Database['public']['Tables']['Product']['Row'] & {
   Vendor: Database['public']['Tables']['Vendor']['Row'];
 };
 
-type FlattenedInventory = {
-     id : string,
-     created_at :  string,
-     name :  string,
-     vendor_id: number,
-     store_id: number,
-     brand  :  string,
-     product_type  :  string,
-     size  :  string,
-     parent_product_type :  string,
-     price: number,
-     description :  string,
-     remaining_stock: number,
-     Store_id: number,
-     Store_location :  string,
-     Store_time_open :  string,
-     Store_created_at :  string,
-     Store_contact_number: number,
-     Vendor_id : number,
-     Vendor_fullname :  string,
-     Vendor_created_at :  string,
-     Vendor_contact_number : number
-    
-};
+
 
 const inventoryArray = ref<Inventory[]>([]);
-const flattenedInventoryArray = ref<FlattenedInventory[]>([]);
+const flattenedInventoryArray = ref<FlattenedInventory[]>([]); //
 const search = ref('');
-const selected = ref<Inventory | null>(null);
+const selected = ref<any>(); //flattened inventory that should be at most 1 item because of single select
 const visibleColumns = ref<string[]>([]);
+const correctSingleSelected = ref<FlattenedInventory>();
 
 const headers = computed(() => {
   if (inventoryArray.value.length > 0) {

@@ -5,6 +5,7 @@
     <div class="p-2 flex justify-center">
         <div>Find the product you like</div>
     </div>
+    <v-container>(refresh if no products show)</v-container>
     <v-text-field prepend-icon="mdi-magnify" hide-details single-line></v-text-field>
 
 
