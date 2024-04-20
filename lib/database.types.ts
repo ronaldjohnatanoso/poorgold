@@ -43,52 +43,37 @@ export type Database = {
             foreignKeyName: "public_Cart_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
-            referencedRelation: "Product"
+            referencedRelation: "Inventory"
             referencedColumns: ["id"]
           },
         ]
       }
-      Product: {
+      Inventory: {
         Row: {
-          brand: string | null
           created_at: string
-          description: string | null
           id: number
           name: string | null
-          parent_product_type: string | null
-          price: number
-          product_type: string
           remaining_stock: number
-          size: string | null
           store_id: number
+          store_price: number
           vendor_id: number
         }
         Insert: {
-          brand?: string | null
           created_at?: string
-          description?: string | null
           id?: number
           name?: string | null
-          parent_product_type?: string | null
-          price: number
-          product_type: string
           remaining_stock?: number
-          size?: string | null
           store_id: number
+          store_price: number
           vendor_id: number
         }
         Update: {
-          brand?: string | null
           created_at?: string
-          description?: string | null
           id?: number
           name?: string | null
-          parent_product_type?: string | null
-          price?: number
-          product_type?: string
           remaining_stock?: number
-          size?: string | null
           store_id?: number
+          store_price?: number
           vendor_id?: number
         }
         Relationships: [
@@ -99,6 +84,50 @@ export type Database = {
             referencedRelation: "Store"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "public_Product_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "Vendor"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Product: {
+        Row: {
+          brand: string | null
+          created_at: string
+          description: string | null
+          id: number
+          parent_product_type: string | null
+          product_type: string
+          size: string | null
+          vendor_id: number
+          vendor_price: number | null
+        }
+        Insert: {
+          brand?: string | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          parent_product_type?: string | null
+          product_type: string
+          size?: string | null
+          vendor_id: number
+          vendor_price?: number | null
+        }
+        Update: {
+          brand?: string | null
+          created_at?: string
+          description?: string | null
+          id?: number
+          parent_product_type?: string | null
+          product_type?: string
+          size?: string | null
+          vendor_id?: number
+          vendor_price?: number | null
+        }
+        Relationships: [
           {
             foreignKeyName: "public_Product_vendor_id_fkey"
             columns: ["vendor_id"]
@@ -145,11 +174,56 @@ export type Database = {
             foreignKeyName: "public_Purchase_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
-            referencedRelation: "Product"
+            referencedRelation: "Inventory"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "public_Purchase_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "Store"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      Reorders: {
+        Row: {
+          arrival_date: string
+          created_at: string
+          id: number
+          product_id: number
+          quantity: number
+          status: string
+          store_id: number
+        }
+        Insert: {
+          arrival_date: string
+          created_at?: string
+          id?: number
+          product_id: number
+          quantity: number
+          status: string
+          store_id: number
+        }
+        Update: {
+          arrival_date?: string
+          created_at?: string
+          id?: number
+          product_id?: number
+          quantity?: number
+          status?: string
+          store_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_Reorders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "Product"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_Reorders_store_id_fkey"
             columns: ["store_id"]
             isOneToOne: false
             referencedRelation: "Store"
@@ -190,7 +264,7 @@ export type Database = {
             foreignKeyName: "public_Sale_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
-            referencedRelation: "Product"
+            referencedRelation: "Inventory"
             referencedColumns: ["id"]
           },
         ]
