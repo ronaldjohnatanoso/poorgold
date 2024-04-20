@@ -79,7 +79,7 @@ definePageMeta({
 
 import { ref } from 'vue';
 import type { Database } from '~/lib/database.types';
-const productStore = useProductStore()
+const productStore = useInventoryProductStore()
 const products = storeToRefs(productStore)
 const supabase = useSupabaseClient<Database>();
 const user = useSupabaseUser()
@@ -247,7 +247,7 @@ const handleCartFetch = async () => {
         const { data, error } = await supabase
             .from('Cart')
             .select(`
-        Product (
+        Inventory (
           *
         ),
         quantity,
@@ -271,7 +271,7 @@ const handleCartFetch = async () => {
             }, 0)
 
             // Check if remaining_stock is zero for any product
-            isSufficientStock.value = !data.some(item => item.Product && item.Product.remaining_stock === 0)
+            isSufficientStock.value = !data.some(item => item.Inventory && item.Inventory.remaining_stock === 0)
         }
     } catch (error) {
         errorMsg.value = (error as any).error_description || (error as any).message

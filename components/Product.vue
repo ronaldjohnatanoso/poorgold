@@ -5,14 +5,14 @@
     <img cover class="h-[200px]" src="/images/png/logo-color.png" alt="">
 
     <v-card-title>
-      {{ productData.name }}
+      {{ productData.Product.name }}
     </v-card-title>
 
     <v-card-subtitle>
-      Product Type: {{ productData.product_type }}
-      <br> Size: {{ productData.size }} <br>
-      Price: {{ productData.price }} <br>
-      Brand: {{ productData.brand }} <br>
+      Product Type: {{ productData.Product.product_type }}
+      <br> Size: {{ productData.Product.size }} <br>
+      Price: {{ productData.store_price }} <br>
+      Brand: {{ productData.Product.brand }} <br>
       Available: {{ productData.remaining_stock }}
     </v-card-subtitle>
 
@@ -31,7 +31,7 @@
         <v-divider></v-divider>
 
         <v-card-text>
-          {{ productData.description }}
+          {{ productData.Product.description }}
         </v-card-text>
       </div>
     </v-expand-transition>
@@ -40,13 +40,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Database } from '~/lib/database.types';
+import type { InventoryProduct } from '~/stores/table';
 const loading = ref(false)
 const errorMsg = ref('')
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 const successMsg = ref('')
 const props = defineProps<{
-  productData: Database["public"]["Tables"]["Product"]["Row"]
+  productData: InventoryProduct
 }>()
 const route = useRouter()
 const handleAddToCart = async () => {

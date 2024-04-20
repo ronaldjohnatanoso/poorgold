@@ -11,7 +11,11 @@
       <v-container>
         Store Location: {{ pickedLocation }}
       </v-container>
-  
+<!--   
+      <v-container>
+        {{ debugString }}
+      </v-container> -->
+
       <v-card v-if="purchaseArray.length > 0" title="Store Purchases" flat>
         <template v-slot:text>
           <v-text-field
@@ -113,8 +117,8 @@
       console.log(error);
     }
   };
-  
-  const handleFetchInventory = async () => {
+  const debugString = ref()
+  const handleFetchPurchase = async () => {
     //need to get the store id from picked location
     const storeId = storeArray.value.find((store) => store.location === pickedLocation.value)?.id;
   
@@ -142,14 +146,16 @@
     } catch (error) {
       console.log(error);
     }
-  
+    debugString.value = JSON.stringify(purchaseArray.value)
     for (let i = 0; i < purchaseArray.value.length; i++) {
       purchaseArray.value[i] = flattenObject(purchaseArray.value[i]);
     }
+    
+   // debugString.value = JSON.stringify(purchaseArray.value)
   };
   
   handleFetchStores();
-  watch(pickedLocation, handleFetchInventory);
+  watch(pickedLocation, handleFetchPurchase);
 
 
 

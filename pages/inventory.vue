@@ -9,7 +9,11 @@
       Store Location: {{ pickedLocation }}
     </v-container>
 
-    <v-card v-if="inventoryArray.length > 0" title="Product Inventory" flat>
+    <!-- <v-container>
+      here: {{ debugString }}
+    </v-container> -->
+
+    <v-card v-if="inventoryArray.length > 0" title="Product Inventory and Manual Reorder" flat>
       <template v-slot:text>
         <v-text-field v-model="search" label="Search by name of product" prepend-inner-icon="mdi-magnify"
           variant="outlined" hide-details single-line></v-text-field>
@@ -20,11 +24,11 @@
           <v-col cols="12" md="6">
             <v-dialog v-model="dialogOpen" transition="dialog-bottom-transition" width="auto">
               <v-card>
-                <v-toolbar title="Product Update and Reorder">{{correctSingleSelected?.name}}</v-toolbar>
+                <v-toolbar title="Manual Reorder">{{correctSingleSelected?.Store_location}}</v-toolbar>
 
                 <v-card-text class="text-h2 pa-12">
-                  Name: {{  correctSingleSelected?.name}} <br>
-                  Price: P{{ correctSingleSelected?.price}}
+                  Name: {{  correctSingleSelected?.Product_name}} <br>
+                  Price: P{{ correctSingleSelected?.store_price}}
                   <br>
                   Remaining stock : {{correctSingleSelected?.remaining_stock}} <br>
                   Vendor: {{correctSingleSelected?.Vendor_fullname}} <br>
@@ -35,6 +39,9 @@
               ></v-select>
                
                 <v-btn @click="handleReorderRequest">Request Reorder</v-btn>
+                <v-container >
+                   <span class="text-red-500">{{ statusMsg }}</span> 
+                </v-container>
 
                 <v-card-actions class="justify-end">
                   <v-btn text="Close" @click="dialogOpen = false"></v-btn>
@@ -72,27 +79,74 @@ definePageMeta({
   middleware: ["employee-only-auth"],
   layout: "topbar-layout",
 });
-import type { FlattenedInventory } from '~/stores/table';
-const supabase = useSupabaseClient();
+import type { FlattenedInventory, Reorder } from '~/stores/table';
+const supabase = useSupabaseClient<Database>();
 const storeArray = ref<Database['public']['Tables']['Store']['Row'][]>([]);
 const locationArray = ref<string[]>([]);
 const pickedLocation = ref<string | null>(null);
 const dialogOpen = ref(false);
 const reorderQuantity = ref<number | null>(null);
+  import { v4 as uuidv4 } from 'uuid';
+const statusMsg = ref('');
 const handleReorderRequest = async () => {
+
+
+  const reorderID = uuidv4();
+
+  //get the store id from picked location
+  const storeId = storeArray.value.find((store) => store.location === pickedLocation.value)?.id;
+  console.log(storeId);
+
+  if(reorderQuantity.value === null || correctSingleSelected.value === undefined){
+    statusMsg.value = "Please select a product and quantity";
+    return;
+  }
+
+  try {
+    const {error} = await supabase.from('Reorders').insert<Reorder>({
+      arrival_date: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          id:reorderID as string ,
+          product_id: correctSingleSelected.value?.product_id as number,
+          quantity: reorderQuantity.value as number,
+          status: "pending",
+          store_id: storeId as number
+
+    })
+
+    if (error) throw error;
+    if(!error){
+      statusMsg.value = "Reorder request sent";
+      dialogOpen.value = false;
+      alert("Reorder request sent")
+    }
+  } catch (error) {
+    console.log(error);
+    statusMsg.value = JSON.stringify(error);
+
+  }
+
   console.log(reorderQuantity.value);
 };
 const handleProductSelect = (value: FlattenedInventory) => {
+  statusMsg.value = ""
+  if (selected.value && selected.value.id === value.id) {
+    // If the same product is selected again, close the dialog
+    dialogOpen.value = false;
+    selected.value = null;
+    correctSingleSelected.value = undefined;
+    return;
+  }
   selected.value = value;
   dialogOpen.value = true;
   console.log(selected.value.name);
-  correctSingleSelected.value = selected.value[0] 
+  correctSingleSelected.value = selected.value[0];
 };
-
 //type joined from Product as base, joined by Store and Vendor
-type Inventory = Database['public']['Tables']['Product']['Row'] & {
+type Inventory = Database['public']['Tables']['Inventory']['Row'] & {
   Store: Database['public']['Tables']['Store']['Row'];
   Vendor: Database['public']['Tables']['Vendor']['Row'];
+  Product: Database['public']['Tables']['Product']['Row'];
 };
 
 
@@ -132,6 +186,8 @@ const visibleHeaders = computed(() => {
   return headers.value.filter((header) => visibleColumns.value.includes(header.value));
 });
 
+const debugString = ref()
+
 const handleFetchStores = async () => {
   try {
     const { data, error } = await supabase.from('Store').select('*');
@@ -139,6 +195,7 @@ const handleFetchStores = async () => {
     if (error) throw error;
     if (!error) {
       storeArray.value = data;
+     
     }
 
     //get the locations only from the object
@@ -147,6 +204,7 @@ const handleFetchStores = async () => {
       .map((store) => store.location as string);
   } catch (error) {
     console.log(error);
+    debugString.value = JSON.stringify(error)
   }
 };
 
@@ -156,13 +214,16 @@ const handleFetchInventory = async () => {
 
   try {
     const { data, error } = await supabase
-      .from('Product')
+      .from('Inventory')
       .select(`
           *,
           Store!inner(
             *
           ),
           Vendor(
+            *
+          ),
+          Product(
             *
           )
         `)
@@ -182,6 +243,8 @@ const handleFetchInventory = async () => {
   for (let i = 0; i < inventoryArray.value.length; i++) {
     inventoryArray.value[i] = flattenObject(inventoryArray.value[i]);
   }
+
+  debugString.value = JSON.stringify(inventoryArray.value)
 };
 
 handleFetchStores();

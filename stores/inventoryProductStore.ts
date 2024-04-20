@@ -2,16 +2,24 @@ import { acceptHMRUpdate, defineStore } from "pinia";
 import type { Database } from "~/lib/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
 
-export const useProductStore = defineStore({
-  id: "productStore",
+
+// type InventoryProductt = Database['public']['Tables']['Inventory']['Row'] & {
+//   Product: Database['public']['Tables']['Product']['Row'];
+//   Store: Database['public']['Tables']['Store']['Row'];
+  
+// };
+
+export const useInventoryProductStore = defineStore({
+  id: "inventoryProductStore",
   state: () => ({
-    products: [] as Database["public"]["Tables"]["Product"]["Row"][], // Initialize an empty array to store products
+    products: [] as InventoryProduct[],
   }),
   actions: {
     async fetchProducts(supabase: SupabaseClient<Database>) {
       try {
-        const { data, error } = await supabase.from("Product").select(`
+        const { data, error } = await supabase.from("Inventory").select(`
           *,
+          Product(*),
           Store!inner(*)
         `)
         // .eq('Store.location', 'website')
@@ -27,7 +35,7 @@ export const useProductStore = defineStore({
         }
 
         // Update the 'products' state with the fetched data
-        this.products = data;
+      this.products = data as InventoryProduct[];
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -35,8 +43,9 @@ export const useProductStore = defineStore({
 
     async getLength(supabase: SupabaseClient<Database>) {
       try {
-        const { data, error } = await supabase.from("Product").select(`
+        const { data, error } = await supabase.from("Inventory").select(`
           *,
+          Product(*),
           Store!inner(*)
         `)
         // .eq('Store.location', 'website')
@@ -53,7 +62,7 @@ export const useProductStore = defineStore({
 
         // Update the 'products' state with the fetched data
         console.log(data);
-        this.products = data;
+        this.products = data as InventoryProduct[];
         return this.products.length as number | 0;
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -63,5 +72,5 @@ export const useProductStore = defineStore({
 });
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useProductStore, import.meta.hot));
+  import.meta.hot.accept(acceptHMRUpdate(useInventoryProductStore, import.meta.hot));
 }

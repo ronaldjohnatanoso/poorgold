@@ -33,5 +33,5 @@ export const useRoleStore = defineStore({
 });
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useProductStore, import.meta.hot));
+  import.meta.hot.accept(acceptHMRUpdate(useRoleStore, import.meta.hot));
 }

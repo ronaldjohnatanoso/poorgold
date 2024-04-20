@@ -52,7 +52,7 @@ export type Database = {
         Row: {
           created_at: string
           id: number
-          name: string | null
+          product_id: number
           remaining_stock: number
           store_id: number
           store_price: number
@@ -61,7 +61,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: number
-          name?: string | null
+          product_id: number
           remaining_stock?: number
           store_id: number
           store_price: number
@@ -70,7 +70,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: number
-          name?: string | null
+          product_id?: number
           remaining_stock?: number
           store_id?: number
           store_price?: number
@@ -78,14 +78,21 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "public_Product_store_id_fkey"
+            foreignKeyName: "public_Inventory_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "Product"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_Inventory_store_id_fkey"
             columns: ["store_id"]
             isOneToOne: false
             referencedRelation: "Store"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "public_Product_vendor_id_fkey"
+            foreignKeyName: "public_Inventory_vendor_id_fkey"
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "Vendor"
@@ -99,6 +106,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: number
+          name: string | null
           parent_product_type: string | null
           product_type: string
           size: string | null
@@ -110,6 +118,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: number
+          name?: string | null
           parent_product_type?: string | null
           product_type: string
           size?: string | null
@@ -121,6 +130,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: number
+          name?: string | null
           parent_product_type?: string | null
           product_type?: string
           size?: string | null
@@ -142,7 +152,7 @@ export type Database = {
           created_at: string
           customer_id: string | null
           id: number
-          product_id: number
+          product_id: number | null
           quantity: number
           store_id: number
         }
@@ -150,7 +160,7 @@ export type Database = {
           created_at?: string
           customer_id?: string | null
           id?: number
-          product_id: number
+          product_id?: number | null
           quantity?: number
           store_id: number
         }
@@ -158,7 +168,7 @@ export type Database = {
           created_at?: string
           customer_id?: string | null
           id?: number
-          product_id?: number
+          product_id?: number | null
           quantity?: number
           store_id?: number
         }
@@ -174,7 +184,7 @@ export type Database = {
             foreignKeyName: "public_Purchase_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
-            referencedRelation: "Inventory"
+            referencedRelation: "Product"
             referencedColumns: ["id"]
           },
           {
@@ -190,7 +200,7 @@ export type Database = {
         Row: {
           arrival_date: string
           created_at: string
-          id: number
+          id: string
           product_id: number
           quantity: number
           status: string
@@ -199,7 +209,7 @@ export type Database = {
         Insert: {
           arrival_date: string
           created_at?: string
-          id?: number
+          id?: string
           product_id: number
           quantity: number
           status: string
@@ -208,7 +218,7 @@ export type Database = {
         Update: {
           arrival_date?: string
           created_at?: string
-          id?: number
+          id?: string
           product_id?: number
           quantity?: number
           status?: string

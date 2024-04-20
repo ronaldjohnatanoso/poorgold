@@ -12,7 +12,7 @@
 
     <v-container class="bg-blue-300">
         <v-row dense>
-            <Product :productData="product" v-for="product in productsArray" />
+            <Product :productData="product" v-for="product in inventoryProductsArray" />
         </v-row>
     </v-container>
 
@@ -39,11 +39,11 @@ const {userRole} = storeToRefs(roleStore)
 
 
 const supabase = useSupabaseClient();
-const productStore = useProductStore()
-const products = storeToRefs(productStore)
-const productsArray = products.products.value
+const inventoryProductStore = useInventoryProductStore()
+const inventoryProducts = storeToRefs(inventoryProductStore)
+const inventoryProductsArray = inventoryProducts.products.value
 const productsLength = ref(0)
-productsLength.value =  await productStore.getLength(supabase) || 0;
+productsLength.value =  await inventoryProductStore.getLength(supabase) || 0;
 console.log("length: " + productsLength.value)
 </script>
 

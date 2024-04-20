@@ -13,10 +13,10 @@
 <script setup lang="ts">
 
 import { storeToRefs } from 'pinia';
-import { useProductStore } from '../stores/productStore';
+import { useInventoryProductStore } from '../stores/inventoryProductStore';
 
 const supabase = useSupabaseClient();
-const productStore = useProductStore()
+const productStore = useInventoryProductStore()
 const products = storeToRefs(productStore)
 const productsArray = products.products.value
 const productsLength = ref(0)
