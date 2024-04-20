@@ -40,3 +40,4 @@ export type FlattenedInventory = {
    export type Store = Database["public"]["Tables"]["Store"]["Row"]
    export type Product = Database["public"]["Tables"]["Product"]["Row"]
   export type ReorderStoreProduct = Reorder & {Store : Store, Product : Product}
+  export type Vendor = Database["public"]["Tables"]["Vendor"]["Row"]

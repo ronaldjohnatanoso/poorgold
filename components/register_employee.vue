@@ -68,7 +68,7 @@ const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 const router = useRouter()
 const roleStore = useRoleStore()    
-
+import { v4 as uuidv4 } from 'uuid';
 const loading = ref(false)
 const handleRegister = async () => {
     const currentUser = user.value
@@ -121,6 +121,23 @@ const handleRegister = async () => {
                 .update({ role: roleType.value, fullname: fullname.value })
                 .eq('id', userId as string)
                 .select()
+
+
+            //if the role is vendor, then create a new vendor row in Vendor table
+            if (roleType.value === 'vendor') {
+                const {  error } = await supabase.from('Vendor').insert<Vendor>(
+                    {
+                        id : userId as string,
+                        created_at: new Date().toISOString(),
+                        fullname : fullname.value,
+                        contact_number : 1234
+                    }
+                )
+                if (error) throw error
+                if(!error){
+                    console.log("Vendor created")
+                }
+            }
 
             //sign out
 

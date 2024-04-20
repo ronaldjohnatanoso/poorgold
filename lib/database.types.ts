@@ -56,7 +56,7 @@ export type Database = {
           remaining_stock: number
           store_id: number
           store_price: number
-          vendor_id: number
+          vendor_id: string | null
         }
         Insert: {
           created_at?: string
@@ -65,7 +65,7 @@ export type Database = {
           remaining_stock?: number
           store_id: number
           store_price: number
-          vendor_id: number
+          vendor_id?: string | null
         }
         Update: {
           created_at?: string
@@ -74,9 +74,16 @@ export type Database = {
           remaining_stock?: number
           store_id?: number
           store_price?: number
-          vendor_id?: number
+          vendor_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "Inventory_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "Vendor"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "public_Inventory_product_id_fkey"
             columns: ["product_id"]
@@ -91,13 +98,6 @@ export type Database = {
             referencedRelation: "Store"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "public_Inventory_vendor_id_fkey"
-            columns: ["vendor_id"]
-            isOneToOne: false
-            referencedRelation: "Vendor"
-            referencedColumns: ["id"]
-          },
         ]
       }
       Product: {
@@ -110,7 +110,7 @@ export type Database = {
           parent_product_type: string | null
           product_type: string
           size: string | null
-          vendor_id: number
+          vendor_id: string | null
           vendor_price: number | null
         }
         Insert: {
@@ -122,7 +122,7 @@ export type Database = {
           parent_product_type?: string | null
           product_type: string
           size?: string | null
-          vendor_id: number
+          vendor_id?: string | null
           vendor_price?: number | null
         }
         Update: {
@@ -134,12 +134,12 @@ export type Database = {
           parent_product_type?: string | null
           product_type?: string
           size?: string | null
-          vendor_id?: number
+          vendor_id?: string | null
           vendor_price?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "public_Product_vendor_id_fkey"
+            foreignKeyName: "Product_vendor_id_fkey"
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "Vendor"
@@ -337,19 +337,19 @@ export type Database = {
           contact_number: number | null
           created_at: string
           fullname: string | null
-          id: number
+          id: string
         }
         Insert: {
           contact_number?: number | null
           created_at?: string
           fullname?: string | null
-          id?: number
+          id?: string
         }
         Update: {
           contact_number?: number | null
           created_at?: string
           fullname?: string | null
-          id?: number
+          id?: string
         }
         Relationships: []
       }

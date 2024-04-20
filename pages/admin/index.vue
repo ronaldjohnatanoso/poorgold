@@ -22,7 +22,6 @@
 </template>
 
 <script setup lang="ts">
-import Admin_nav from '~/components/admin_nav.vue';
 const windowOption = ref<string>("")
 
 definePageMeta({

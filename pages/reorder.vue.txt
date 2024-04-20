@@ -13,7 +13,7 @@
       here: {{ debugString }}
     </v-container> -->
 
-    <v-card v-if="inventoryArray.length > 0" title="Product Inventory and Manual Reorder" flat>
+    <v-card v-if="nestedReorderArray.length > 0" title="Product Reorder and Manual Reorder" flat>
       <template v-slot:text>
         <v-text-field v-model="search" label="Search by name of product" prepend-inner-icon="mdi-magnify"
           variant="outlined" hide-details single-line></v-text-field>
@@ -63,7 +63,7 @@
         {{ header.title }}
       </v-btn>
 
-      <v-data-table :items="flattenedInventoryArray" :search="search" :headers="visibleHeaders" select-strategy="single"
+      <v-data-table :items="flatReorderArray" :search="search" :headers="visibleHeaders" select-strategy="single"
         show-select v-model-value="selected" @update:model-value="handleProductSelect($event as FlattenedInventory)"
         item-value="id" return-object></v-data-table>
 
@@ -143,28 +143,28 @@ const handleProductSelect = (value: FlattenedInventory) => {
   console.log(selected.value.name);
   correctSingleSelected.value = selected.value[0];
 
-  console.log(flattenedInventoryArray.value)
+  console.log(flatReorderArray.value)
 
 };
 //type joined from Product as base, joined by Store and Vendor
-type Inventory = Database['public']['Tables']['Inventory']['Row'] & {
-  Store: Database['public']['Tables']['Store']['Row'];
-  Vendor: Database['public']['Tables']['Vendor']['Row'];
-  Product: Database['public']['Tables']['Product']['Row'];
-};
+// type Reorder = Database['public']['Tables']['Reorder']['Row'] & {
+//   Store: Database['public']['Tables']['Store']['Row'];
+//   Vendor: Database['public']['Tables']['Vendor']['Row'];
+//   Product: Database['public']['Tables']['Product']['Row'];
+// };
 
 
 
-const inventoryArray = ref<Inventory[]>([]);
-const flattenedInventoryArray = ref<FlattenedInventory[]>([]); //
+const nestedReorderArray = ref<ReorderStoreProduct[]>([]);
+const flatReorderArray = ref<FlattenedInventory[]>([]); //
 const search = ref('');
 const selected = ref<any>(); //flattened inventory that should be at most 1 item because of single select
 const visibleColumns = ref<string[]>([]);
 const correctSingleSelected = ref<FlattenedInventory>();
 
 const headers = computed(() => {
-  if (flattenedInventoryArray.value.length > 0) {
-    const firstItem = flattenedInventoryArray.value[0];
+  if (flatReorderArray.value.length > 0) {
+    const firstItem = flatReorderArray.value[0];
     return Object.keys(firstItem).map((key) => ({
       value: key,
       title: key,
@@ -184,8 +184,8 @@ const toggleColumn = (column: string) => {
 };
 
 const visibleHeaders = computed(() => {
-  if (visibleColumns.value.length === 0 && flattenedInventoryArray.value.length > 0) {
-    visibleColumns.value = Object.keys(flattenedInventoryArray.value[0]);
+  if (visibleColumns.value.length === 0 && flatReorderArray.value.length > 0) {
+    visibleColumns.value = Object.keys(flatReorderArray.value[0]);
   }
   return headers.value.filter((header) => visibleColumns.value.includes(header.value));
 });
@@ -212,43 +212,44 @@ const handleFetchStores = async () => {
   }
 };
 
+
+
 const handleFetchInventory = async () => {
   //need to get the store id from picked location
-  const storeId = storeArray.value.find((store) => store.location === pickedLocation.value)?.id;
-
+  const vendorID = 
   try {
     const { data, error } = await supabase
-      .from('Inventory')
+      .from('Reorder')
       .select(`
           *,
-          Store!inner(
-            *
-          ),
-          Vendor(
+          Store(
             *
           ),
           Product(
             *
+          ),
+          Vendor!inner(
+            *
           )
         `)
-      .match({ 'Store.id': storeId });
+      .match({ 'Vendor.id': storeId });
 
     if (error) throw error;
     if (!error) {
       console.log(data);
-      inventoryArray.value = data as Inventory[];
+      nestedReorderArray.value = data as Reorder[];
       // Reset visible columns when new data is fetched
-      visibleColumns.value = Object.keys(flattenedInventoryArray.value[0] || {});
+      visibleColumns.value = Object.keys(flatReorderArray.value[0] || {});
     }
   } catch (error) {
     console.log(error);
   }
 
-  for (let i = 0; i < inventoryArray.value.length; i++) {
-    flattenedInventoryArray.value[i] = flattenObject(inventoryArray.value[i]);
+  for (let i = 0; i < nestedReorderArray.value.length; i++) {
+    flatReorderArray.value[i] = flattenObject(nestedReorderArray.value[i]);
   }
 
-  debugString.value = JSON.stringify(flattenedInventoryArray.value)
+  debugString.value = JSON.stringify(flatReorderArray.value)
 };
 
 handleFetchStores();
