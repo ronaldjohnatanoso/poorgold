@@ -14,24 +14,34 @@ export type Database = {
           created_at: string
           customer_id: string
           id: number
-          product_id: number
+          inventory_id: number
+          product_id: number | null
           quantity: number
         }
         Insert: {
           created_at?: string
           customer_id: string
           id?: number
-          product_id: number
+          inventory_id: number
+          product_id?: number | null
           quantity?: number
         }
         Update: {
           created_at?: string
           customer_id?: string
           id?: number
-          product_id?: number
+          inventory_id?: number
+          product_id?: number | null
           quantity?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_product_id"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "Product"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "public_Cart_customer_id_fkey"
             columns: ["customer_id"]
@@ -41,7 +51,7 @@ export type Database = {
           },
           {
             foreignKeyName: "public_Cart_product_id_fkey"
-            columns: ["product_id"]
+            columns: ["inventory_id"]
             isOneToOne: false
             referencedRelation: "Inventory"
             referencedColumns: ["id"]

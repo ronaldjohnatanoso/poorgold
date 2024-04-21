@@ -45,3 +45,7 @@ export type FlattenedInventory = {
    export type basicInventory = Database["public"]["Tables"]["Inventory"]["Row"]
 
   export type basicPurchase = Database["public"]["Tables"]["Purchase"]["Row"]
+export type CartInventoryProduct = Database["public"]["Tables"]["Cart"]["Row"] & { Inventory : InventoryProduct, Product : Product}
+export type Cart = Database["public"]["Tables"]["Cart"]["Row"]
+
+export type Purchase = Database["public"]["Tables"]["Purchase"]["Row"] 

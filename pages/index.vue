@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import type { Database } from '~/lib/database.types';
+
 
 
 
@@ -37,10 +39,10 @@ const refreshKey = ref(0)
 
 
 
-const supabase = useSupabaseClient();
+const supabase = useSupabaseClient<Database>();
 const inventoryProductStore = await useInventoryProductStore()
 const inventoryProducts = storeToRefs(inventoryProductStore)
-const inventoryProductsArray = inventoryProducts.products.value
+const inventoryProductsArray : InventoryProduct[] = inventoryProducts.products.value
 const productsLength = ref()
 
 

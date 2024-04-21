@@ -1,0 +1,2 @@
+bug on homepage not showing products immediately
+additional query stuff for convience

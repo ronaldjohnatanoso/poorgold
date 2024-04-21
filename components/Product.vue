@@ -49,12 +49,16 @@ const successMsg = ref('')
 const props = defineProps<{
   productData: InventoryProduct
 }>()
+
+console.log("productData: " + props.productData)
+
 const route = useRouter()
 
 const roleStore = useRoleStore()
 const userRole = await roleStore.getUserRole()
-const handleAddToCart = async () => {
 
+const handleAddToCart = async () => {
+  console.log("i want to handle")
   if(userRole != 'customer'){
     errorMsg.value = "You must be a customer to add to cart"
     console.log("You must be a customer to add to cart")
@@ -64,12 +68,15 @@ const handleAddToCart = async () => {
     loading.value = true
     const {  error } = await supabase
       .from('Cart')
-      .insert(
+      .insert<Cart>(
       {
-        customer_id: user.value ? user.value.id : '',
-        product_id: props.productData.id,
-        quantity: 1
-      }
+      
+        created_at: new Date().toISOString(),
+        quantity: 1,
+        customer_id : user.value?.id,
+        inventory_id : props.productData.id,
+        product_id : props.productData.Product.id
+      } as Cart
       )
     if (error) throw error
 
@@ -81,21 +88,6 @@ const handleAddToCart = async () => {
       console.log("Added to cart")
       console.log(successMsg.value)
   
-      //update user metadata to customer table
-      const userId = user.value?.id;
-
-      // Find the user row in the `public.user` table
-      const { data, error: queryError } = await supabase
-        .from('user')
-        .select('*')
-        .eq('id', userId as string)
-        .single();
-
-      if (queryError) {
-        // Handle query error
-        console.error('Query error:', queryError);
-        return;
-      }
 
 
     }

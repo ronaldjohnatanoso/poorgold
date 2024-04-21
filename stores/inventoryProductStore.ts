@@ -61,7 +61,7 @@ export const useInventoryProductStore = defineStore({
         }
 
         // Update the 'products' state with the fetched data
-        console.log(data);
+      console.log(data);
         this.products = data as InventoryProduct[];
         return this.products.length as number | 0;
       } catch (error) {
