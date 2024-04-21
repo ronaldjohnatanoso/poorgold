@@ -10,7 +10,7 @@
 
 
 
-    <v-container :key="refreshKey" class="bg-blue-300">
+    <v-container v-if="productContainer"  :key="refreshKey" class="bg-blue-300">
         <v-row dense>
             <Product :productData="product" v-for="product in inventoryProductsArray" />
         </v-row>
@@ -45,9 +45,9 @@ const inventoryProducts = storeToRefs(inventoryProductStore)
 const inventoryProductsArray : InventoryProduct[] = inventoryProducts.products.value
 const productsLength = ref()
 
-
+const productContainer = ref(false)
 productsLength.value =  await inventoryProductStore.getLength(supabase) || 0;
-
+productContainer.value = true
 watch(inventoryProductsArray, () => {
     refreshKey.value++
 })
