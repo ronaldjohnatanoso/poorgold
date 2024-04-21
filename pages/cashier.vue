@@ -27,9 +27,9 @@
 
                     <v-checkbox v-if="!isRegistered" v-model="isWantRegister" label="Does he want to register?"></v-checkbox>
                     <v-container v-if="isWantRegister">They can register at our online website. There are a lot of benefits so they better do it :)</v-container>
-                    <v-text-field v-if="isRegistered" v-model="customerID" label="Customer Loyalty Card ID"></v-text-field>
-                    <v-autocomplete :rules="productRules" label="Choose the product ID:" v-model="pickedProduct"
-                    :items="inventoryArray.map((product) => product.product_id)"></v-autocomplete>
+                    <v-text-field v-if="isRegistered" v-model="customerID" label="Customer ID"></v-text-field>
+                    <v-autocomplete :rules="productRules" label="Choose the product inventory ID:" v-model="pickedProduct"
+                    :items="inventoryArray.map((product) => product.id)"></v-autocomplete>
                     <v-text-field :rules="integerOnly" v-model="quantityPicked" label="quantity"></v-text-field>
                       
                     <v-btn @click="handleAddSubmit" class="mt-2" type="submit" block>Submit</v-btn>
@@ -43,13 +43,14 @@
 <script setup lang="ts">
 import type { Database } from '~/lib/database.types';
 import type { basicInventory, basicPurchase } from '~/stores/table';
+import Purchases from './purchases.vue';
 
 definePageMeta({
     middleware: ["employee-only-auth"],
     layout: "topbar-layout",
 });
 
-const supabase = useSupabaseClient();
+const supabase = useSupabaseClient<Database>();
 const storeArray = ref<Database['public']['Tables']['Store']['Row'][]>([]);
 const locationArray = ref<string[]>([]);
 const pickedLocation = ref<string | null>(null);
@@ -79,38 +80,105 @@ const productRules = ref([
 
 const quantityPicked = ref<number | null>(null);
 const handleAddSubmit = async () => {
-    console.log(pickedProduct.value)
+    console.log("the inventory id is: ", pickedProduct.value)
+    console.log("the quantity picked is: ", quantityPicked.value)
+    //console.log(pickedProduct.value)
     console.log('submitting');
-    const {data, error} = await supabase.from('Purchase').insert<any>({
+    const { data, error } = await supabase.from('Purchase').insert({
         quantity : quantityPicked.value,
         customer_id : customerID.value,
         store_id : storeIDref.value,
-        product_id : pickedProduct.value,
+      //  product_id : pickedProduct.value,
         created_at : new Date().toISOString(),
+        inventory_id : pickedProduct.value
 
-    } )
+    } as basicPurchase )
     if (error) {
         console.log(error)
     }
     if(!error){
         console.log(data)
+        alert("done submitting")
+        //clear the inputs
+
+
+        //subtract quantity from inventory
+        console.log("-the inventory id is: ", pickedProduct.value)
+        console.log("-the quantity picked is: ", quantityPicked.value)
+  
+    await handleSubtractInventory( )
+ 
+       quantityPicked.value = null
+        customerID.value = null
+        pickedProduct.value = null
     }
 };
 
+const handleGetRemainingStock = async ()  => {
+    console.log("fetching remaining stock")
+    console.log("the inventory id is: ", pickedProduct.value)
+    
+    console.log("the store id is: ", storeIDref.value)
+    const { data, error } = await supabase
+        .from('Inventory')
+        .select('*')
+        .match({ id: pickedProduct.value 
+            });
 
-const visibleColumns = ref<string[]>([]);
-
-const headers = computed(() => {
-    if (purchaseArray.value.length > 0) {
-        const firstItem = purchaseArray.value[0];
-        return Object.keys(firstItem).map((key) => ({
-            value: key,
-            title: key,
-            sortable: true,
-        }));
+    if (error) {
+        console.log("there is eror")
+        console.log(error);
+    } else {
+        console.log("no error")
+        console.log(data);
+        console.log("remaining stock is: ", data[0].remaining_stock)
+        console.log("the quantity picked is: ", quantityPicked.value)
+        return data[0].remaining_stock as number ;
     }
-    return [];
-});
+    
+
+};
+
+const handleSubtractInventory = async () => {
+
+    console.log("The inventory id is: ", pickedProduct.value)
+    console.log("The quantity picked is: ", quantityPicked.value)
+    
+    //get the remaining stock of the product
+    const remainingStock = await handleGetRemainingStock()  as number
+
+    const newStock = remainingStock - (quantityPicked.value ?? 0); // Calculate the new stock value, defaulting to 0 if quantityPicked.value is null
+
+    console.log("the remaining stock is: ", remainingStock);
+    console.log("the quantity is picked is: ", quantityPicked.value);
+    console.log(remainingStock, "-", quantityPicked.value, "=", newStock);
+    if(remainingStock === 0){
+        alert("Product is out of stock")
+        return}
+    if(remainingStock === undefined){
+        alert("Product not found")
+        return
+    }
+    if (quantityPicked.value !== null && remainingStock < quantityPicked.value) {
+        alert("Not enough stock")
+        return
+    }
+
+  const { data, error } = await supabase
+    .from('Inventory')
+    .update({
+       remaining_stock : newStock
+    })
+    .match({ id: pickedProduct.value });
+
+  if (error) {
+    console.log(error);
+  } else {
+    console.log(data);
+  }
+};
+
+
 const inventoryArray = ref<basicInventory[]>([]);
 
 const productArray = ref<number[]>([])
@@ -121,7 +189,11 @@ const handleFetchInventoryProducts = async (storeID: number)=>{
 
         if (error) throw error;
         if (!error) {
+            console.log("here ")
+            console.log(data)
             inventoryArray.value = data as basicInventory[];
+
+                //
         }
 
         //get the locations only from the object
@@ -144,7 +216,7 @@ const handleFetchStores = async () => {
         if (error) throw error;
         if (!error) {
             storeArray.value = data;
-     
+           // console.log("these are the store: ", storeArray.value)
         }
 
         //get the locations only from the object
@@ -166,15 +238,13 @@ const handleFetchPurchase = async () => {
     //fetch the product list from inventory
     await handleFetchInventoryProducts(storeId as number)
 
+    
     try {
         const { data, error } = await supabase
             .from('Purchase')
             .select(`
           *,
           Store!inner(
-            *
-          ),
-          Product(
             *
           )
         `)
@@ -183,12 +253,14 @@ const handleFetchPurchase = async () => {
         if (error) throw error;
         if (!error) {
             console.log(data);
-            purchaseArray.value = data as Purchase[];
+            purchaseArray.value = data as any;
             // Reset visible columns when new data is fetched
-            visibleColumns.value = Object.keys(purchaseArray.value[0] || {});
+         //   visibleColumns.value = Object.keys(purchaseArray.value[0] || {});
+
         }
     } catch (error) {
         console.log(error);
+
     }
     debugString.value = JSON.stringify(purchaseArray.value)
     for (let i = 0; i < purchaseArray.value.length; i++) {

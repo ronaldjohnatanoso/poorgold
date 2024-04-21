@@ -78,13 +78,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Inventory_vendor_id_fkey"
-            columns: ["vendor_id"]
-            isOneToOne: false
-            referencedRelation: "Vendor"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "public_Inventory_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
@@ -96,6 +89,13 @@ export type Database = {
             columns: ["store_id"]
             isOneToOne: false
             referencedRelation: "Store"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_Inventory_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "Vendor"
             referencedColumns: ["id"]
           },
         ]
@@ -139,7 +139,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Product_vendor_id_fkey"
+            foreignKeyName: "public_Product_vendor_id_fkey"
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "Vendor"
@@ -152,7 +152,7 @@ export type Database = {
           created_at: string
           customer_id: string | null
           id: number
-          product_id: number | null
+          inventory_id: number | null
           quantity: number
           store_id: number
         }
@@ -160,7 +160,7 @@ export type Database = {
           created_at?: string
           customer_id?: string | null
           id?: number
-          product_id?: number | null
+          inventory_id?: number | null
           quantity?: number
           store_id: number
         }
@@ -168,23 +168,23 @@ export type Database = {
           created_at?: string
           customer_id?: string | null
           id?: number
-          product_id?: number | null
+          inventory_id?: number | null
           quantity?: number
           store_id?: number
         }
         Relationships: [
           {
+            foreignKeyName: "fk_inventory_id"
+            columns: ["inventory_id"]
+            isOneToOne: false
+            referencedRelation: "Inventory"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "public_Purchase_customer_id_fkey"
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "user"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_Purchase_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "Product"
             referencedColumns: ["id"]
           },
           {
@@ -205,6 +205,7 @@ export type Database = {
           quantity: number
           status: string
           store_id: number
+          vendor_id: string | null
         }
         Insert: {
           arrival_date: string
@@ -214,6 +215,7 @@ export type Database = {
           quantity: number
           status: string
           store_id: number
+          vendor_id?: string | null
         }
         Update: {
           arrival_date?: string
@@ -223,8 +225,16 @@ export type Database = {
           quantity?: number
           status?: string
           store_id?: number
+          vendor_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_vendor_id"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "Vendor"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "public_Reorders_product_id_fkey"
             columns: ["product_id"]

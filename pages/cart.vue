@@ -247,12 +247,7 @@ const handleCartFetch = async () => {
         const { data, error } = await supabase
             .from('Cart')
             .select(`
-        Inventory (
-          *
-        ),
-        quantity,
-        created_at,
-        id
+            *,Inventory(*)
         
       `)
             .eq('customer_id', user.value?.id || '')

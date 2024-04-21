@@ -19,7 +19,7 @@
                     <v-btn v-if="!user" @click="handleRegisterPress" color="purple">Register</v-btn>
                     <v-btn @click="handleHomePress" :color="$route.path === '/' ? 'purple' : undefined">Home</v-btn>
                     <v-btn @click="handleProfile"  v-if="user" :color="$route.path === '/profile' ? 'purple' : undefined"   >Profile</v-btn>
-                    <v-btn @click="handleGoToCart" v-if="user && userRole=='customer'" :color="$route.path === '/cart' ? 'purple' : undefined">My Cart</v-btn>
+                    <v-btn @click="handleGoToCart" v-if="user && userRole=='customer'|| userRole=='guest'  " :color="$route.path === '/cart' ? 'purple' : undefined">My Cart</v-btn>
                     <v-btn @click="handleGoToInventory" v-if="userRole === 'employee'" :color="$route.path === '/inventory' ? 'purple' : undefined">Inventory</v-btn>
                     <v-btn @click="handleGoToPurchases" v-if="userRole === 'employee'" :color="$route.path === '/purchases' ? 'purple' : undefined">Purchases History</v-btn>
                     <v-btn @click="handleGoToCashier" v-if="userRole === 'employee'" :color="$route.path === '/cashier' ? 'purple' : undefined">Cashier Record</v-btn>

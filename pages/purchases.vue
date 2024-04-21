@@ -66,7 +66,7 @@
   //type joined from Product as base, joined by Store and Vendor
   type Purchase = Database['public']['Tables']['Purchase']['Row'] & {
     Store: Database['public']['Tables']['Store']['Row'];
-    Product: Database['public']['Tables']['Product']['Row'];
+    Inventory: Database['public']['Tables']['Inventory']['Row'];
   };
   
   const purchaseArray = ref<Purchase[]>([]);
@@ -129,17 +129,15 @@
           *,
           Store!inner(
             *
-          ),
-          Product(
-            *
-          )
+          ),Inventory(*)
+   
         `)
         .match({ 'Store.id': storeId });
   
       if (error) throw error;
       if (!error) {
         console.log(data);
-        purchaseArray.value = data as Purchase[];
+        purchaseArray.value = data  ;
         // Reset visible columns when new data is fetched
         visibleColumns.value = Object.keys(purchaseArray.value[0] || {});
       }
