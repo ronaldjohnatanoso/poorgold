@@ -26,7 +26,7 @@ export type FlattenedInventory = {
     Product_description: string;
     Product_product_type: string;
     Product_vendor_price: number;
-    Product_parent_product_type: null;
+    Product_parent_product_type: string;
   };
 
   export type Reorder = Database["public"]["Tables"]["Reorders"]["Row"]
@@ -41,3 +41,4 @@ export type FlattenedInventory = {
    export type Product = Database["public"]["Tables"]["Product"]["Row"]
   export type ReorderStoreProduct = Reorder & {Store : Store, Product : Product}
   export type Vendor = Database["public"]["Tables"]["Vendor"]["Row"]
+  export type ReorderProductStore = Reorder & {Product : Product, Store : Store}

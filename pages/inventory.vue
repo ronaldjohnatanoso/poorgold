@@ -64,7 +64,7 @@
       </v-btn>
 
       <v-data-table :items="flattenedInventoryArray" :search="search" :headers="visibleHeaders" select-strategy="single"
-        show-select v-model-value="selected" @update:model-value="handleProductSelect($event as FlattenedInventory)"
+        show-select v-model-value="selected" @update:model-value="handleProductSelect($event as FlattenedInventory[])"
         item-value="id" return-object></v-data-table>
 
       <pre>{{ correctSingleSelected }}</pre>
@@ -105,13 +105,14 @@ const handleReorderRequest = async () => {
 
   try {
     const {error} = await supabase.from('Reorders').insert<Reorder>({
-      arrival_date: new Date().toISOString(),
+      arrival_date: "none",
           created_at: new Date().toISOString(),
           id:reorderID as string ,
           product_id: correctSingleSelected.value?.product_id as number,
           quantity: reorderQuantity.value as number,
           status: "pending",
-          store_id: storeId as number
+          store_id: storeId as number,
+          // vendor_id: correctSingleSelected.value?.vendor_id as number
 
     })
 
@@ -129,21 +130,23 @@ const handleReorderRequest = async () => {
 
   console.log(reorderQuantity.value);
 };
-const handleProductSelect = (value: FlattenedInventory) => {
-  statusMsg.value = ""
-  if (selected.value && selected.value.id === value.id) {
-    // If the same product is selected again, close the dialog
-    dialogOpen.value = false;
-    selected.value = null;
+const handleProductSelect = (value: FlattenedInventory[]) => {
+  console.log(value)
+
+
+  if(value.length ==0 ){
+    //just unchecking
     correctSingleSelected.value = undefined;
+    console.log("no value")
     return;
   }
-  selected.value = value;
-  dialogOpen.value = true;
-  console.log(selected.value.name);
-  correctSingleSelected.value = selected.value[0];
 
-  console.log(flattenedInventoryArray.value)
+  if(value.length){
+    console.log("more than 1 value")
+    correctSingleSelected.value = value[0]
+    dialogOpen.value = true;
+    return;
+  }
 
 };
 //type joined from Product as base, joined by Store and Vendor

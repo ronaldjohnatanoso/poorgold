@@ -1,17 +1,12 @@
 <template>
+  
   <v-container>
-    Enter the location of the store:
-  </v-container>
-  <v-container>
-    <v-autocomplete label="Enter store location" v-model="pickedLocation"
-      :items="storeArray.map((store) => store.location)"></v-autocomplete>
-    <v-container>
-      Store Location: {{ pickedLocation }}
-    </v-container>
+
+
 
     <!-- <v-container>
       here: {{ debugString }}
-    </v-container> -->
+    </v-container>  -->
 
     <v-card v-if="nestedReorderArray.length > 0" title="Product Reorder and Manual Reorder" flat>
       <template v-slot:text>
@@ -24,23 +19,29 @@
           <v-col cols="12" md="6">
             <v-dialog v-model="dialogOpen" transition="dialog-bottom-transition" width="auto">
               <v-card>
-                <v-toolbar title="Manual Reorder">{{correctSingleSelected?.Store_location}}</v-toolbar>
+                <v-toolbar title="Reorder Requests"> </v-toolbar>
 
                 <v-card-text class="text-h2 pa-12">
-                  Name: {{  correctSingleSelected?.Product_name}} <br>
-                  Price: P{{ correctSingleSelected?.store_price}}
+                  Product ID: {{ correctSingleSelected?.product_id }} <br>
+                  Name: {{ correctSingleSelected?.Product_name }} <br>
+                  Vendor Price: P{{ correctSingleSelected?.Product_vendor_price }}
                   <br>
-                  Remaining stock : {{correctSingleSelected?.remaining_stock}} <br>
-                  Vendor: {{correctSingleSelected?.Vendor_fullname}} <br>
+                  Amount Requested : {{ (correctSingleSelected as any)?.quantity }}
+                  <br>
+                  Store Location: {{ correctSingleSelected?.Store_location }} <br>
                 </v-card-text>
-                <v-select v-model="reorderQuantity" 
-                label="Select quantity to be added"
-                :items="[5,10,20,50,100]"
-              ></v-select>
-               
-                <v-btn @click="handleReorderRequest">Request Reorder</v-btn>
-                <v-container >
-                   <span class="text-red-500">{{ statusMsg }}</span> 
+
+
+                <v-container>
+                  <v-row justify="space-around">
+                    <v-date-picker v-model="date" elevation="24"></v-date-picker>
+                  </v-row>
+                </v-container>
+
+                <v-btn @click="handleReorderApprove">Approve </v-btn>
+                <v-btn @click="handleReorderReject">Reject </v-btn>
+                <v-container>
+                  <span class="text-red-500">{{ statusMsg }}</span>
                 </v-container>
 
                 <v-card-actions class="justify-end">
@@ -56,16 +57,18 @@
         </v-row>
       </v-container>
 
+
+
       <v-btn v-for="header in headers" :key="header.value" @click="toggleColumn(header.value)" :class="[
         'header',
         visibleColumns.includes(header.value) ? 'visible' : 'hidden',
       ]">
         {{ header.title }}
       </v-btn>
-
+      <v-container color>{{statusMsg}}</v-container>
       <v-data-table :items="flatReorderArray" :search="search" :headers="visibleHeaders" select-strategy="single"
-        show-select v-model-value="selected" @update:model-value="handleProductSelect($event as FlattenedInventory)"
-        item-value="id" return-object></v-data-table>
+        show-select v-model-value="selected" @update:model-value="handleProductSelect($event as any[])"
+        item-value="Product_name" return-object></v-data-table>
 
       <pre>{{ correctSingleSelected }}</pre>
     </v-card>
@@ -76,7 +79,7 @@
 import type { Database } from '~/lib/database.types';
 
 definePageMeta({
-  middleware: ["employee-only-auth"],
+  middleware: ["vendor-only-auth"],
   layout: "topbar-layout",
 });
 import type { FlattenedInventory, Reorder } from '~/stores/table';
@@ -86,11 +89,13 @@ const locationArray = ref<string[]>([]);
 const pickedLocation = ref<string | null>(null);
 const dialogOpen = ref(false);
 const reorderQuantity = ref<number | null>(null);
-  import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 const statusMsg = ref('');
+const date = ref()
+
+
+
 const handleReorderRequest = async () => {
-
-
 
   const reorderID = uuidv4();
 
@@ -98,25 +103,25 @@ const handleReorderRequest = async () => {
   const storeId = storeArray.value.find((store) => store.location === pickedLocation.value)?.id;
   console.log(storeId);
 
-  if(reorderQuantity.value === null || correctSingleSelected.value === undefined){
+  if (reorderQuantity.value === null || correctSingleSelected.value === undefined) {
     statusMsg.value = "Please select a product and quantity";
     return;
   }
 
   try {
-    const {error} = await supabase.from('Reorders').insert<Reorder>({
+    const { error } = await supabase.from('Reorders').insert<Reorder>({
       arrival_date: new Date().toISOString(),
-          created_at: new Date().toISOString(),
-          id:reorderID as string ,
-          product_id: correctSingleSelected.value?.product_id as number,
-          quantity: reorderQuantity.value as number,
-          status: "pending",
-          store_id: storeId as number
+      created_at: new Date().toISOString(),
+      id: reorderID as string,
+      product_id: correctSingleSelected.value?.product_id as number,
+      quantity: reorderQuantity.value as number,
+      status: "pending",
+      store_id: storeId as number
 
     })
 
     if (error) throw error;
-    if(!error){
+    if (!error) {
       statusMsg.value = "Reorder request sent";
       dialogOpen.value = false;
       alert("Reorder request sent")
@@ -129,21 +134,70 @@ const handleReorderRequest = async () => {
 
   console.log(reorderQuantity.value);
 };
-const handleProductSelect = (value: FlattenedInventory) => {
-  statusMsg.value = ""
-  if (selected.value && selected.value.id === value.id) {
-    // If the same product is selected again, close the dialog
-    dialogOpen.value = false;
-    selected.value = null;
+
+const handleReorderApprove = async () => {
+  console.log("arrive in " + date.value)
+  try {
+    const { error } = await supabase.from('Reorders').update({
+      status: "approved",
+      arrival_date: date.value
+    }).match({ id: correctSingleSelected.value?.id })
+
+    if (error) throw error;
+    if (!error) {
+      statusMsg.value = "Reorder request approved";
+      dialogOpen.value = false;
+      //  alert("Reorder request approved")
+    }
+  } catch (error) {
+    console.log(error);
+    statusMsg.value = JSON.stringify(error);
+
+  }
+}
+
+const handleReorderReject = async () => {
+  try {
+    const { error } = await supabase.from('Reorders').update({
+      status: "rejected",
+      arrival_date: new Date().toISOString()
+    }).match({ id: correctSingleSelected.value?.id })
+
+    if (error) throw error;
+    if (!error) {
+      statusMsg.value = "Reorder request rejected";
+      dialogOpen.value = false;
+      //lert("Reorder request rejected")
+    }
+  } catch (error) {
+    console.log(error);
+    statusMsg.value = JSON.stringify(error);
+
+  }
+}
+
+const handleProductSelect = (value: any[]) => {
+  statusMsg.value = "";
+
+  if (value.length == 0) {
+    //just unchecking
     correctSingleSelected.value = undefined;
+    console.log("no value")
     return;
   }
-  selected.value = value;
-  dialogOpen.value = true;
-  console.log(selected.value.name);
-  correctSingleSelected.value = selected.value[0];
 
-  console.log(flatReorderArray.value)
+  if (value.length) {
+    console.log("more than 1 value")
+    correctSingleSelected.value = value[0]
+
+    if( (correctSingleSelected.value as any) .status !== "pending"){
+    statusMsg.value = "This request has already been processed";
+    return;
+  }
+
+    dialogOpen.value = true;
+    return;
+  }
 
 };
 //type joined from Product as base, joined by Store and Vendor
@@ -192,34 +246,35 @@ const visibleHeaders = computed(() => {
 
 const debugString = ref()
 
-const handleFetchStores = async () => {
-  try {
-    const { data, error } = await supabase.from('Store').select('*');
+// const handleFetchStores = async () => {
+//   try {
+//     const { data, error } = await supabase.from('Store').select('*');
 
-    if (error) throw error;
-    if (!error) {
-      storeArray.value = data;
-     
-    }
+//     if (error) throw error;
+//     if (!error) {
+//       storeArray.value = data;
 
-    //get the locations only from the object
-    locationArray.value = storeArray.value
-      .filter((store) => store.location !== null)
-      .map((store) => store.location as string);
-  } catch (error) {
-    console.log(error);
-    debugString.value = JSON.stringify(error)
-  }
-};
+//     }
+
+//     //get the locations only from the object
+//     locationArray.value = storeArray.value
+//       .filter((store) => store.location !== null)
+//       .map((store) => store.location as string);
+//   } catch (error) {
+//     console.log(error);
+//     debugString.value = JSON.stringify(error)
+//   }
+// };
 
 
+const roleStore = useRoleStore()
+const vendorId = await roleStore.getUserId()
 
-const handleFetchInventory = async () => {
-  //need to get the store id from picked location
-  const vendorID = 
+const handleFetchReorders = async () => {
+
   try {
     const { data, error } = await supabase
-      .from('Reorder')
+      .from('Reorders')
       .select(`
           *,
           Store(
@@ -227,21 +282,20 @@ const handleFetchInventory = async () => {
           ),
           Product(
             *
-          ),
-          Vendor!inner(
-            *
           )
+  
         `)
-      .match({ 'Vendor.id': storeId });
+      .match({ 'Product.vendor_id': vendorId });
 
     if (error) throw error;
     if (!error) {
       console.log(data);
-      nestedReorderArray.value = data as Reorder[];
+      nestedReorderArray.value = data as ReorderStoreProduct[];
       // Reset visible columns when new data is fetched
       visibleColumns.value = Object.keys(flatReorderArray.value[0] || {});
     }
   } catch (error) {
+    console.log("error")
     console.log(error);
   }
 
@@ -251,12 +305,13 @@ const handleFetchInventory = async () => {
 
   debugString.value = JSON.stringify(flatReorderArray.value)
 };
+handleFetchReorders();
 
-handleFetchStores();
-watch(pickedLocation, handleFetchInventory);
+//handleFetchStores();
+//watch(pickedLocation, handleFetchInventory);
 
 
-
+debugString.value = date.value
 
 </script>
 

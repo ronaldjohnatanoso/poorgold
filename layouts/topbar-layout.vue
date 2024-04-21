@@ -24,6 +24,7 @@
                     <v-btn @click="handleGoToPurchases" v-if="userRole === 'employee'" :color="$route.path === '/purchases' ? 'purple' : undefined">Purchases</v-btn>
                     <v-btn @click="handleGoToAdmin" v-if="user && userRole =='admin'" :color="$route.path === '/admin' ? 'purple' : undefined">Admin Page</v-btn>
                     <v-btn @click="handleGoToReorder" v-if="user && userRole =='vendor'" :color="$route.path === '/reorder' ? 'purple' : undefined">Reorder</v-btn>
+                    <v-btn @click="handleGoToVendorProducts" v-if="user && userRole =='vendor'" :color="$route.path === '/vendor_product' ? 'purple' : undefined">My Products</v-btn>
                     <v-btn @click="handleRoleCheck" class="bg-red-300">role: {{ userRole }}</v-btn>
                     
                   </div>
@@ -50,6 +51,10 @@ const router = useRouter()
 
 const handleLoginPress = () => {
     router.push('/login')
+}
+
+const handleGoToVendorProducts = () => {
+    router.push('/vendor_product')
 }
 
 const handleProfile = () => {
