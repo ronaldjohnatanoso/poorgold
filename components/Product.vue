@@ -50,9 +50,16 @@ const props = defineProps<{
   productData: InventoryProduct
 }>()
 const route = useRouter()
-const handleAddToCart = async () => {
-  console.log("Added to cart")
 
+const roleStore = useRoleStore()
+const userRole = await roleStore.getUserRole()
+const handleAddToCart = async () => {
+
+  if(userRole != 'customer'){
+    errorMsg.value = "You must be a customer to add to cart"
+    console.log("You must be a customer to add to cart")
+    return
+  }
   try {
     loading.value = true
     const {  error } = await supabase
@@ -71,7 +78,7 @@ const handleAddToCart = async () => {
       route.push('/login')
       
     } else if (!error) {
-
+      console.log("Added to cart")
       console.log(successMsg.value)
   
       //update user metadata to customer table
@@ -89,12 +96,7 @@ const handleAddToCart = async () => {
         console.error('Query error:', queryError);
         return;
       }
-      // //update the user metadata
-      // const { error } = await supabase
-      //   .from('user')
-      //   .update({ role: 'customer', fullname: fullname.value })
-      //   .eq('id', userId as string)
-      //   .select()
+
 
     }
   } catch (error) {
@@ -107,9 +109,6 @@ const handleAddToCart = async () => {
 
 const show = ref(false)
 
-const toggleShow = () => {
-  show.value = !show.value
-}
 
 show.value = false
 </script>

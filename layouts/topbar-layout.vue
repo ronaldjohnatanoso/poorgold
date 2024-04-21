@@ -21,7 +21,8 @@
                     <v-btn @click="handleProfile"  v-if="user" :color="$route.path === '/profile' ? 'purple' : undefined"   >Profile</v-btn>
                     <v-btn @click="handleGoToCart" v-if="user && userRole=='customer'" :color="$route.path === '/cart' ? 'purple' : undefined">My Cart</v-btn>
                     <v-btn @click="handleGoToInventory" v-if="userRole === 'employee'" :color="$route.path === '/inventory' ? 'purple' : undefined">Inventory</v-btn>
-                    <v-btn @click="handleGoToPurchases" v-if="userRole === 'employee'" :color="$route.path === '/purchases' ? 'purple' : undefined">Purchases</v-btn>
+                    <v-btn @click="handleGoToPurchases" v-if="userRole === 'employee'" :color="$route.path === '/purchases' ? 'purple' : undefined">Purchases History</v-btn>
+                    <v-btn @click="handleGoToCashier" v-if="userRole === 'employee'" :color="$route.path === '/cashier' ? 'purple' : undefined">Cashier Record</v-btn>
                     <v-btn @click="handleGoToAdmin" v-if="user && userRole =='admin'" :color="$route.path === '/admin' ? 'purple' : undefined">Admin Page</v-btn>
                     <v-btn @click="handleGoToReorder" v-if="user && userRole =='vendor'" :color="$route.path === '/reorder' ? 'purple' : undefined">Reorder</v-btn>
                     <v-btn @click="handleGoToVendorProducts" v-if="user && userRole =='vendor'" :color="$route.path === '/vendor_product' ? 'purple' : undefined">My Products</v-btn>
@@ -67,6 +68,10 @@ const handleRegisterPress = () => {
 
 const handleGoToReorder = () => {
     router.push('/reorder')
+}
+
+const handleGoToCashier = () => {
+    router.push('/cashier')
 }
 
 const handleHomePress = () => {

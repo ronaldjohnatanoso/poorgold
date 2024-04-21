@@ -84,56 +84,11 @@ definePageMeta({
 });
 import type { FlattenedInventory, Reorder } from '~/stores/table';
 const supabase = useSupabaseClient<Database>();
-const storeArray = ref<Database['public']['Tables']['Store']['Row'][]>([]);
-const locationArray = ref<string[]>([]);
-const pickedLocation = ref<string | null>(null);
 const dialogOpen = ref(false);
-const reorderQuantity = ref<number | null>(null);
-import { v4 as uuidv4 } from 'uuid';
+
 const statusMsg = ref('');
 const date = ref()
 
-
-
-const handleReorderRequest = async () => {
-
-  const reorderID = uuidv4();
-
-  //get the store id from picked location
-  const storeId = storeArray.value.find((store) => store.location === pickedLocation.value)?.id;
-  console.log(storeId);
-
-  if (reorderQuantity.value === null || correctSingleSelected.value === undefined) {
-    statusMsg.value = "Please select a product and quantity";
-    return;
-  }
-
-  try {
-    const { error } = await supabase.from('Reorders').insert<Reorder>({
-      arrival_date: new Date().toISOString(),
-      created_at: new Date().toISOString(),
-      id: reorderID as string,
-      product_id: correctSingleSelected.value?.product_id as number,
-      quantity: reorderQuantity.value as number,
-      status: "pending",
-      store_id: storeId as number
-
-    })
-
-    if (error) throw error;
-    if (!error) {
-      statusMsg.value = "Reorder request sent";
-      dialogOpen.value = false;
-      alert("Reorder request sent")
-    }
-  } catch (error) {
-    console.log(error);
-    statusMsg.value = JSON.stringify(error);
-
-  }
-
-  console.log(reorderQuantity.value);
-};
 
 const handleReorderApprove = async () => {
   console.log("arrive in " + date.value)
@@ -191,7 +146,7 @@ const handleProductSelect = (value: any[]) => {
     correctSingleSelected.value = value[0]
 
     if( (correctSingleSelected.value as any) .status !== "pending"){
-    statusMsg.value = "This request has already been processed";
+    statusMsg.value = "This request has already been processed - you can sort by status";
     return;
   }
 
@@ -200,13 +155,6 @@ const handleProductSelect = (value: any[]) => {
   }
 
 };
-//type joined from Product as base, joined by Store and Vendor
-// type Reorder = Database['public']['Tables']['Reorder']['Row'] & {
-//   Store: Database['public']['Tables']['Store']['Row'];
-//   Vendor: Database['public']['Tables']['Vendor']['Row'];
-//   Product: Database['public']['Tables']['Product']['Row'];
-// };
-
 
 
 const nestedReorderArray = ref<ReorderStoreProduct[]>([]);
@@ -245,27 +193,6 @@ const visibleHeaders = computed(() => {
 });
 
 const debugString = ref()
-
-// const handleFetchStores = async () => {
-//   try {
-//     const { data, error } = await supabase.from('Store').select('*');
-
-//     if (error) throw error;
-//     if (!error) {
-//       storeArray.value = data;
-
-//     }
-
-//     //get the locations only from the object
-//     locationArray.value = storeArray.value
-//       .filter((store) => store.location !== null)
-//       .map((store) => store.location as string);
-//   } catch (error) {
-//     console.log(error);
-//     debugString.value = JSON.stringify(error)
-//   }
-// };
-
 
 const roleStore = useRoleStore()
 const vendorId = await roleStore.getUserId()

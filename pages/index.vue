@@ -39,7 +39,7 @@ const {userRole} = storeToRefs(roleStore)
 
 
 const supabase = useSupabaseClient();
-const inventoryProductStore = useInventoryProductStore()
+const inventoryProductStore = await useInventoryProductStore()
 const inventoryProducts = storeToRefs(inventoryProductStore)
 const inventoryProductsArray = inventoryProducts.products.value
 const productsLength = ref(0)
