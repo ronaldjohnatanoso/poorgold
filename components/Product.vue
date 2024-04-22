@@ -59,7 +59,7 @@ const userRole = await roleStore.getUserRole()
 
 const handleAddToCart = async () => {
   console.log("i want to handle")
-  if(userRole === 'customer'){
+  if(userRole != 'customer'){
     errorMsg.value = "You must be a customer to add to cart"
     console.log("You must be a customer to add to cart")
 
