@@ -1,112 +1,170 @@
-<template >
-
-    <v-app class="max-h-20 overflow-auto">
-        
-        <v-app-bar class="p-2">
-            <img class="max-w-[50px]" src="/images/png/logo-no-background.png" alt="">
-    
-            <v-container class="flex  justify-between">
-      
-
-
-                <div class="bg-yellow-300"> 
-                    <v-btn class="bg-red-300 !important"  >
-                        Poor Gold
-                    </v-btn>
-                </div>
-                <div id="signin" class="p-2 space-x-5 bg-blue-300">
-<v-btn v-if="!user" @click="handleLoginPress" :color="$route.path === '/' ? 'purple' : undefined">Login</v-btn>
-<v-btn v-if="!user" @click="handleRegisterPress" :color="$route.path === '/register' ? 'purple' : undefined">Register</v-btn>
-<v-btn @click="handleHomePress" :color="$route.path === '/' ? 'purple' : undefined">Home</v-btn>
-<v-btn @click="handleProfile" v-if="user" :color="$route.path === '/profile' ? 'purple' : undefined">Profile</v-btn>
-<v-btn @click="handleGoToCart" v-if="userRole && (userRole === 'customer' || userRole === 'guest')" :color="$route.path === '/cart' ? 'purple' : undefined">My Cart</v-btn>
-<v-btn @click="handleGoToInventory" v-if="userRole === 'employee'" :color="$route.path === '/inventory' ? 'purple' : undefined">Inventory</v-btn>
-<v-btn @click="handleGoToPurchases" v-if="userRole === 'employee'" :color="$route.path === '/purchases' ? 'purple' : undefined">Purchases History</v-btn>
-<v-btn @click="handleGoToCashier" v-if="userRole === 'employee'" :color="$route.path === '/cashier' ? 'purple' : undefined">Cashier Record</v-btn>
-<v-btn @click="handleGoToAdmin" v-if="user && userRole === 'admin'" :color="$route.path === '/admin' ? 'purple' : undefined">Admin Page</v-btn>
-<v-btn @click="handleGoToReorder" v-if="user && userRole === 'vendor'" :color="$route.path === '/reorder' ? 'purple' : undefined">Reorder</v-btn>
-<v-btn @click="handleGoToVendorProducts" v-if="user && userRole === 'vendor'" :color="$route.path === '/vendor_product' ? 'purple' : undefined">My Products</v-btn>
-<v-btn @click="handleRoleCheck" class="bg-red-300">role: {{ userRole }}</v-btn>
-
-                  </div>
-            </v-container>
-        </v-app-bar>
-    
-       
-    </v-app>
-    <slot />
-
-</template>
-
-<script setup lang="ts">
-
-
-
-let user = useSupabaseUser()
-const roleStore = useRoleStore()
-const {userRole} = storeToRefs(roleStore)
-await roleStore.getUserRole()
-// let metadata = user.value?.user_metadata
-// let userRole = metadata?.role
-console.log("userRole: " + userRole.value)
-
-const router = useRouter()
-
-const handleLoginPress = () => {
-    router.push('/login')
-}
-
-const handleGoToVendorProducts = () => {
-    router.push('/vendor_product')
-}
-
-const handleProfile = () => {
-    router.push('/profile')
-}
-
-const handleRegisterPress = () => {
-    router.push('/register')
-}
-
-const handleGoToReorder = () => {
-    router.push('/reorder')
-}
-
-const handleGoToCashier = () => {
-    router.push('/cashier')
-}
-
-const handleHomePress = () => {
-    router.push('/')
-}
-
-const handleGoToCart = () => {
-    router.push('/cart')
-}
-
-const handleGoToInventory = () => {
-    router.push('/inventory')
-}
-
-const handleGoToAdmin = () => {
-    console.log(" i want admin")
-    router.push('/admin')
-}
-
-const handleRoleCheck = async () => {
-    await roleStore.getUserRole()
+<template>
+    <v-app >
+      <v-app-bar app class="nice"  dense>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <img class="max-w-[80px]" src="/images/png/logo-no-background.png" alt="">
+        <v-toolbar-title class=""><span class="text-2xl">Poor Gold</span></v-toolbar-title>
+ 
+        <v-spacer></v-spacer>
+        <v-btn color="purple"  class=" font-bold mr-2"> <span class=" text-xl">Role:  {{userRole}}</span></v-btn>
+      </v-app-bar>
   
+      <v-navigation-drawer  class="nice" v-model="drawer" app>
+        <v-list nav dense>
+          <v-list-item-group active-class="deep-purple--text text--accent-4">
+            <v-list-item v-if="!user" @click="handleLoginPress">
+              <v-list-item-icon>
+                <v-icon>mdi-login</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Login</v-list-item-title>
+            </v-list-item>
+  
+            <v-list-item v-if="!user" @click="handleRegisterPress">
+              <v-list-item-icon>
+                <v-icon>mdi-account-plus</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Register</v-list-item-title>
+            </v-list-item>
+  
+            <v-list-item @click="handleHomePress">
+              <v-list-item-icon>
+                <v-icon>mdi-home</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Home</v-list-item-title>
+            </v-list-item>
+  
+            <v-list-item v-if="user" @click="handleProfile">
+              <v-list-item-icon>
+                <v-icon>mdi-account</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Profile</v-list-item-title>
+            </v-list-item>
+  
+            <v-list-item v-if="userRole && (userRole === 'customer' || userRole === 'guest')" @click="handleGoToCart">
+              <v-list-item-icon>
+                <v-icon>mdi-cart</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>My Cart</v-list-item-title>
+            </v-list-item>
+  
+            <v-list-item v-if="userRole === 'employee'" @click="handleGoToInventory">
+              <v-list-item-icon>
+                <v-icon>mdi-warehouse</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Inventory</v-list-item-title>
+            </v-list-item>
+  
+            <v-list-item v-if="userRole === 'employee'" @click="handleGoToPurchases">
+              <v-list-item-icon>
+                <v-icon>mdi-history</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Purchases History</v-list-item-title>
+            </v-list-item>
+  
+            <v-list-item v-if="userRole === 'employee'" @click="handleGoToCashier">
+              <v-list-item-icon>
+                <v-icon>mdi-cash-register</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Cashier Record</v-list-item-title>
+            </v-list-item>
+  
+            <v-list-item v-if="user && userRole === 'admin'" @click="handleGoToAdmin">
+              <v-list-item-icon>
+                <v-icon>mdi-shield</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Admin Page</v-list-item-title>
+            </v-list-item>
+  
+            <v-list-item v-if="user && userRole === 'vendor'" @click="handleGoToReorder">
+              <v-list-item-icon>
+                <v-icon>mdi-reorder</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Reorder</v-list-item-title>
+            </v-list-item>
+  
+            <v-list-item v-if="user && userRole === 'vendor'" @click="handleGoToVendorProducts">
+              <v-list-item-icon>
+                <v-icon>mdi-shopping</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>My Products</v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-navigation-drawer>
+      
+      <div class="py-20">
+        <slot />
+      </div>
+    </v-app>
+
+  </template>
+  
+  <script setup lang="ts">
+  let user = useSupabaseUser();
+  const roleStore = useRoleStore();
+  const { userRole } = storeToRefs(roleStore);
+  await roleStore.getUserRole();
+  
+  const router = useRouter();
+  const drawer = ref(false);
+  
+  const handleLoginPress = () => {
+    router.push("/login");
+    drawer.value = false;
+  };
+  const handleGoToVendorProducts = () => {
+    router.push("/vendor_product");
+    drawer.value = false;
+  };
+  const handleProfile = () => {
+    router.push("/profile");
+    drawer.value = false;
+  };
+  const handleRegisterPress = () => {
+    router.push("/register");
+    drawer.value = false;
+  };
+  const handleGoToReorder = () => {
+    router.push("/reorder");
+    drawer.value = false;
+  };
+  const handleGoToCashier = () => {
+    router.push("/cashier");
+    drawer.value = false;
+  };
+  const handleHomePress = () => {
+    router.push("/");
+    drawer.value = false;
+  };
+  const handleGoToCart = () => {
+    router.push("/cart");
+    drawer.value = false;
+  };
+  const handleGoToInventory = () => {
+    router.push("/inventory");
+    drawer.value = false;
+  };
+  const handleGoToAdmin = () => {
+    console.log(" i want admin");
+    router.push("/admin");
+    drawer.value = false;
+  };
+  const handleRoleCheck = async () => {
+    await roleStore.getUserRole();
+  };
+  const handleGoToPurchases = () => {
+    router.push("/purchases");
+    drawer.value = false;
+  };
+  </script>
+<style scoped>
+.nice {
+  background: linear-gradient(to right, #a6e3ff, #9af7cb);
+  /* You can adjust the gradient colors and direction as needed */
 }
 
-const handleGoToPurchases = () => {
-    router.push('/purchases')
+.big  {
+    font-size: 2rem;
+    font-weight: bold;
 }
-
-
-
-
-
-
-</script>
-
-<style scoped></style>
+</style>

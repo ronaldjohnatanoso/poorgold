@@ -19,5 +19,9 @@ export default defineNuxtConfig({
   },
   imports : {
     dirs : ['stores']
+  },
+  css: ['vuetify/lib/styles/main.sass', "@mdi/font/css/materialdesignicons.min.css"],
+  build : {
+    transpile : ['vuetify']
   }
 })

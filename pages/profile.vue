@@ -84,7 +84,7 @@ const handleFetchUserInfo = async () =>{
 handleFetchUserInfo()
 
 
-
+console.log("herel")
 
 </script>
 

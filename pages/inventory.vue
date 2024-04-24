@@ -13,6 +13,10 @@
       here: {{ debugString }}
     </v-container> -->
 
+    <!-- <v-container>
+      <v-btn color="purple">Add New Product from Vendor</v-btn>
+    </v-container> -->
+
     <v-card v-if="inventoryArray.length > 0" title="Product Inventory and Manual Reorder" flat>
       <template v-slot:text>
         <v-text-field v-model="search" label="Search by name of product" prepend-inner-icon="mdi-magnify"
@@ -114,7 +118,7 @@ const handleReorderRequest = async () => {
           store_id: storeId as number,
           // vendor_id: correctSingleSelected.value?.vendor_id as number
 
-    })
+    } as Reorder)
 
     if (error) throw error;
     if(!error){
