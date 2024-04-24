@@ -154,6 +154,16 @@ const handleVendorProductSelect = (value: Product[]) => {
 const handleNewProduct = async () => {
   console.log(vendorProductSelected.value)
 
+  //check if the selected product already exists in the store
+  const existingProduct = inventoryArray.value.find(
+    (inventory) => inventory.product_id === vendorProductSelected.value?.id
+  );
+
+  if (existingProduct) {
+    addOrderMsg.value = "Product already exists in store";
+    return;
+  }
+
   addOrderMsg.value = "";
   if (vendorProductSelected.value === undefined) {
     addOrderMsg.value = "Please select a product";
