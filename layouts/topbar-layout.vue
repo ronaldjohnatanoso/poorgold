@@ -1,6 +1,6 @@
 <template>
     <v-app >
-      <v-app-bar app class="nice"  dense>
+      <v-app-bar  app class="nice"  dense>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <img class="max-w-[80px]" src="/images/png/logo-no-background.png" alt="">
         <v-toolbar-title class=""><span class="text-2xl">Poor Gold</span></v-toolbar-title>
@@ -9,7 +9,7 @@
         <v-btn color="purple"  class=" font-bold mr-2"> <span class=" text-xl">Role:  {{userRole}}</span></v-btn>
       </v-app-bar>
   
-      <v-navigation-drawer  class="nice" v-model="drawer" app>
+      <v-navigation-drawer class="nice" v-model="drawer" app>
         <v-list nav dense>
           <v-list-item-group active-class="deep-purple--text text--accent-4">
             <v-list-item v-if="!user" @click="handleLoginPress">

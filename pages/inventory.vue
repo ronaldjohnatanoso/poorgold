@@ -129,7 +129,7 @@ const dialogOpen = ref(false);
 const reorderQuantity = ref<number | null>(null);
 import { v4 as uuidv4 } from 'uuid';
 const statusMsg = ref('');
-const addProductDialogOpen = ref(true);
+const addProductDialogOpen = ref(false);
 const vendorProductArray = ref<Product[]>([]);
 const visibleVendorColumns = ref<string[]>([])
 //const productSelected = ref<any>();
@@ -212,14 +212,14 @@ const handleReorderRequest = async () => {
 
   try {
     const { error } = await supabase.from('Reorders').insert<Reorder>({
-      arrival_date: "none",
+      arrival_date: new Date().toISOString(),
       created_at: new Date().toISOString(),
       id: reorderID as string,
       product_id: correctSingleSelected.value?.product_id as number,
       quantity: reorderQuantity.value as number,
       status: "pending",
       store_id: storeId as number,
-      // vendor_id: correctSingleSelected.value?.vendor_id as number
+      //vendor_id: correctSingleSelected.value?.Vendor_id 
 
     } as Reorder)
 

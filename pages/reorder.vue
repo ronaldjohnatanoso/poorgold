@@ -156,7 +156,7 @@ const handleProductSelect = (value: any[]) => {
 
 };
 
-
+import type { ReorderStoreProduct } from '~/lib/table';
 const nestedReorderArray = ref<ReorderStoreProduct[]>([]);
 const flatReorderArray = ref<FlattenedInventory[]>([]); //
 const search = ref('');
@@ -239,6 +239,7 @@ handleFetchReorders();
 
 
 debugString.value = date.value
+
 
 </script>
 

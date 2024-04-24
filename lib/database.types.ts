@@ -261,44 +261,6 @@ export type Database = {
           },
         ]
       }
-      Sale: {
-        Row: {
-          created_at: string
-          customer_id: number
-          id: number
-          open_time: string | null
-          product_id: number
-          quantity: number
-          store_id: number
-        }
-        Insert: {
-          created_at?: string
-          customer_id: number
-          id?: number
-          open_time?: string | null
-          product_id: number
-          quantity?: number
-          store_id: number
-        }
-        Update: {
-          created_at?: string
-          customer_id?: number
-          id?: number
-          open_time?: string | null
-          product_id?: number
-          quantity?: number
-          store_id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "public_Sale_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "Inventory"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       Store: {
         Row: {
           contact_number: number | null
