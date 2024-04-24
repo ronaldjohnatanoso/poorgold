@@ -108,7 +108,7 @@
 
 <script setup lang="ts">
 import type { Database } from '~/lib/database.types';
-
+import type {Product} from '~/lib/table';
 definePageMeta({
     middleware: ["vendor-only-auth"],
     layout: "topbar-layout",

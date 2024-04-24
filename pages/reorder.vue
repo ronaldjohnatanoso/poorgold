@@ -82,7 +82,7 @@ definePageMeta({
   middleware: ["vendor-only-auth"],
   layout: "topbar-layout",
 });
-import type { FlattenedInventory, Reorder } from '~/stores/table';
+import type { FlattenedInventory, Reorder } from '~/lib/table';
 const supabase = useSupabaseClient<Database>();
 const dialogOpen = ref(false);
 

@@ -78,7 +78,7 @@ import type { Database } from '~/lib/database.types';
     //middleware: ["vendor-only-auth"],
     layout: "topbar-layout",
   });
-  import type { CartInventoryProduct, FlattenedInventory, Reorder } from '~/stores/table';
+  import type { CartInventoryProduct, FlattenedInventory, Reorder } from '~/lib/table';
   const supabase = useSupabaseClient<Database>();
   const dialogOpen = ref(false);
   const openTable =ref<boolean>(true)

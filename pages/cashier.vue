@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import type { Database } from '~/lib/database.types';
-import type { basicInventory, basicPurchase } from '~/stores/table';
+import type { basicInventory, basicPurchase } from '~/lib/table';
 import Purchases from './purchases.vue';
 
 definePageMeta({
