@@ -65,7 +65,7 @@
           <v-col cols="12" md="6">
             <v-dialog v-model="dialogOpen" transition="dialog-bottom-transition" width="auto">
               <v-card>
-                <v-toolbar title="Manual Reorder">{{ correctSingleSelected?.Store_location }}</v-toolbar>
+                <v-toolbar title="Manual Reorder"></v-toolbar>
 
                 <v-card-text class="text-h2 pa-12">
                   Name: {{ correctSingleSelected?.Product_name }} <br>
