@@ -19,7 +19,7 @@
 
 
     <v-card-actions>
-      <v-btn @click="handleAddToCart" color="orange-lighten-2" text="Add to Cart"></v-btn>
+      <v-btn @click="handleAddToCart" class="bg-green" color="yellow" text="Add to Cart"></v-btn>
 
       <v-spacer></v-spacer>
 

@@ -1,7 +1,7 @@
 import { acceptHMRUpdate, defineStore } from "pinia";
 import type { Database } from "~/lib/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
-
+import type { InventoryProduct } from "~/lib/table";
 
 // type InventoryProductt = Database['public']['Tables']['Inventory']['Row'] & {
 //   Product: Database['public']['Tables']['Product']['Row'];

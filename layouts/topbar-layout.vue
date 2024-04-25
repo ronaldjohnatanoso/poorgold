@@ -3,7 +3,7 @@
       <v-app-bar  app class="nice"  dense>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <img class="max-w-[80px]" src="/images/png/logo-no-background.png" alt="">
-        <v-toolbar-title class=""><span class="text-2xl">Poor Gold</span></v-toolbar-title>
+        <v-toolbar-title class=""><span class="text-2xl text-green-700 font-bold">Poor Gold</span></v-toolbar-title>
  
         <v-spacer></v-spacer>
         <v-btn color="purple"  class=" font-bold mr-2"> <span class=" text-xl">Role:  {{userRole}}</span></v-btn>
@@ -159,7 +159,7 @@
   </script>
 <style scoped>
 .nice {
-  background: linear-gradient(to right, #a6e3ff, #9af7cb);
+  background: linear-gradient(to right, #dae699, hsl(55, 72%, 79%));
   /* You can adjust the gradient colors and direction as needed */
 }
 
