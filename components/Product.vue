@@ -41,6 +41,7 @@
 import { ref } from 'vue'
 import type { Database } from '~/lib/database.types';
 import type { InventoryProduct } from '~/lib/table';
+import type {Cart } from '~/lib/table'
 const loading = ref(false)
 const errorMsg = ref('')
 const supabase = useSupabaseClient<Database>()
