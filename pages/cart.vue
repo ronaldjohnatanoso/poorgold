@@ -1,5 +1,4 @@
 <template>
-  
     <v-container>
   
   
@@ -53,11 +52,18 @@
         ]">
           {{ header.title }}
         </v-btn>
+
+        
         <v-container>
-            <v-btn @click="handleCheckOut">Check out</v-btn>
+          <v-form>
+            <v-text-field label="Enter address" :rules="addressRules" v-model="address"> </v-text-field>    
+
+            <v-btn color="purple" @click="handleCheckOut">Check out</v-btn>
+          </v-form>
+
         </v-container>
         <v-container >
-           Total:  {{total}}
+           Total:  P{{total}} + delivery fee (COD)
         </v-container>
   
         <v-container color>{{statusMsg}}</v-container>
@@ -85,7 +91,10 @@ import type { Database } from '~/lib/database.types';
   const statusMsg = ref('');
   const date = ref()
   const total = ref<number>(0)
-
+  const addressRules = [
+    (v: string) => !!v || 'Address is required',
+  ]
+const address = ref<string>('')
 const handleOrderDelete = async () => {
 
 

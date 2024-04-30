@@ -1,23 +1,30 @@
 <template>
-    <v-container>
-        email: {{ user ? user.email : '' }}
+    
+<v-container class="mx-auto">
+    <v-container >
+        <v-container>
+            email: {{ user ? user.email : '' }}
+        </v-container>
+        <v-container>
+            role: {{ userRole }}
+        </v-container>
+    
+        <v-container>
+            fullname: {{ userFullName }}
+        </v-container>
+        <v-container>
+            id: {{ user ? user.id : '' }}
+        </v-container>
+        <!-- <data_check /> -->
+        <v-container>
+            <v-btn  @click="handleLogout">Logout>
+              
+            </v-btn>
+        </v-container>
+    
     </v-container>
-    <v-container>
-        role: {{ userRole }}
-    </v-container>
+</v-container>
 
-    <v-container>
-        fullname: {{ userFullName }}
-    </v-container>
-    <v-container>
-        id: {{ user ? user.id : '' }}
-    </v-container>
-    <!-- <data_check /> -->
-    <v-container>
-        <v-btn  @click="handleLogout">Logout>
-          
-        </v-btn>
-    </v-container>
     <!-- <ProductCheck /> -->
 </template>
 

@@ -10,10 +10,17 @@
             <v-autocomplete @update:modelValue="handleTypeChange" hide-details single-line variant="outlined"
                 prepend-inner-icon="mdi-magnify" v-model="selectedProductType" label="Product Type"
                 :items="categoryList"></v-autocomplete>
+                <v-container>
+                    <v-row>
+                        <v-col v-for="type in categoryList">
+                            <v-btn @click="handleTypeChange(type)" color="green">{{type}}</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-container>
         </v-container>
     
      <v-container   class="shadow-xl rounded bg-yellow-100">
-            <v-container v-if="selectedProductType">{{ selectedProductType  }}</v-container>
+            <v-container  v-if="selectedProductType"><span class="font-bold">Category: {{ selectedProductType  }}</span></v-container>
             <v-row dense  >
                 <Product :productData="product" v-for="product in filteredProducts" />
             </v-row> 
@@ -26,7 +33,7 @@
         </v-container>
         <v-container v-if="searchedInventoryProduct.length < 1" :key="refreshKey" class="shadow-xl rounded bg-blue-200">
             <v-row dense>
-                <v-container>Browse All</v-container>
+                <v-container><span class="font-bold">All Products</span></v-container>
                 <Product class="my-5" :productData="product" v-for="product in inventoryProductsArray" />
             </v-row>
         </v-container>
@@ -43,7 +50,25 @@
     
     
     
-    
+    <v-bottom-navigation>
+        <v-btn value="recent">
+          <v-icon>mdi-history</v-icon>
+      
+          <span>Recent</span>
+        </v-btn>
+      
+        <v-btn value="favorites">
+          <v-icon>mdi-heart</v-icon>
+      
+          <span>Favorites</span>
+        </v-btn>
+      
+        <v-btn value="nearby">
+          <v-icon>mdi-map-marker</v-icon>
+      
+          <span>Nearby</span>
+        </v-btn>
+      </v-bottom-navigation>
     </template>
     
     <script setup lang="ts">

@@ -1,5 +1,7 @@
 <template>
     <v-sheet class="mx-auto" width="300">
+
+      <img src="/images/png/logo-no-background.png" alt="">
       <v-form @submit.prevent=handleLogin>
         <v-text-field
           v-model="email"
@@ -15,6 +17,7 @@
        
         <v-btn  class="mt-2" type="submit" block>Submit</v-btn>
         <div class="m-2 text-red-500">{{errorMsg}}</div>
+        <span class="underline text-blue-500">forgot password?</span>
       </v-form>
     </v-sheet>
  

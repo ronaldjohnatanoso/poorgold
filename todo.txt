@@ -1,2 +1,6 @@
-bug on homepage not showing products immediately
+
 additional query stuff for convience
+
+parallax effect for background
+
+scroll into view in home page
