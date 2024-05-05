@@ -32,7 +32,17 @@
 
         <v-card-text>
           {{ productData.Product.description }}
+          <br>
+          Quantity: {{ orderQuantity }}
+          <v-btn icon @click="subtractQuantity">
+            <v-icon size="18">mdi-minus</v-icon>
+          </v-btn>
+          <v-btn icon @click="addQuantity">
+            <v-icon size="18">mdi-plus</v-icon>
+          </v-btn>
+          
         </v-card-text>
+        
       </div>
     </v-expand-transition>
   </v-card>
@@ -47,6 +57,7 @@ const errorMsg = ref('')
 const supabase = useSupabaseClient<Database>()
 const user = useSupabaseUser()
 const successMsg = ref('')
+const orderQuantity = ref<number>(0)
 const props = defineProps<{
   productData: InventoryProduct
 }>()
@@ -74,7 +85,7 @@ const handleAddToCart = async () => {
       {
       
         created_at: new Date().toISOString(),
-        quantity: 1,
+        quantity: orderQuantity.value,
         customer_id : user.value?.id,
         inventory_id : props.productData.id,
         product_id : props.productData.Product.id
@@ -99,6 +110,14 @@ const handleAddToCart = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const subtractQuantity = ()=>{
+  if(orderQuantity.value < 0 ){return}
+  orderQuantity.value = orderQuantity.value - 1;
+}
+const addQuantity = ()=>{
+  orderQuantity.value = orderQuantity.value + 1
 }
 
 const show = ref(false)
