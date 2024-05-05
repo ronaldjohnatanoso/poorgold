@@ -47,19 +47,28 @@
               <v-list-item-title>My Cart</v-list-item-title>
             </v-list-item>
   
-            <v-list-item v-if="userRole === 'employee'" @click="handleGoToInventory">
+            <v-list-item v-if="userRole === 'employee' || userRole === 'admin'" @click="handleGoToInventory">
               <v-list-item-icon>
                 <v-icon>mdi-warehouse</v-icon>
               </v-list-item-icon>
               <v-list-item-title>Inventory</v-list-item-title>
             </v-list-item>
   
-            <v-list-item v-if="userRole === 'employee'" @click="handleGoToPurchases">
+            <v-list-item v-if="userRole === 'employee' || userRole === 'admin'" @click="handleGoToPurchases">
               <v-list-item-icon>
                 <v-icon>mdi-history</v-icon>
               </v-list-item-icon>
               <v-list-item-title>Purchases History</v-list-item-title>
             </v-list-item>
+
+
+            <v-list-item v-if="userRole === 'employee' || userRole === 'admin'" @click="handleGoToAnalytics">
+              <v-list-item-icon>
+                <v-icon>mdi-google-analytics</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title>Analytics</v-list-item-title>
+            </v-list-item>
+
   
             <v-list-item v-if="userRole === 'employee'" @click="handleGoToCashier">
               <v-list-item-icon>
@@ -152,6 +161,11 @@
   const handleRoleCheck = async () => {
     await roleStore.getUserRole();
   };
+
+  const handleGoToAnalytics = () => {
+    router.push("/analytics")
+    drawer.value = false
+  }
   const handleGoToPurchases = () => {
     router.push("/purchases");
     drawer.value = false;
